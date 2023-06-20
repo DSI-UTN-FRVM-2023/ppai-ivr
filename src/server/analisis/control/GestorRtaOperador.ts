@@ -1,7 +1,7 @@
-import { DominioService } from 'src/dominio.service';
+import { DominioService } from '../../dominio.service';
 import { Accion } from '../entity/Accion';
 import { CategoriaLlamada } from '../entity/CategoriaLlamada';
-import { Estado, NombresEstado } from '../entity/Estado';
+import { Estado } from '../entity/Estado';
 import { InformacionCliente } from '../entity/InformacionCliente';
 import { OpcionLlamada } from '../entity/OpcionLlamada';
 import { SubOpcionLlamada } from '../entity/SubOpcionLlamada';
