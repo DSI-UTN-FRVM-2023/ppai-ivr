@@ -1672,7 +1672,12 @@ camelcase@^6.2.0:
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-6.3.0.tgz#5685b95eb209ac9c0c177467778c9c84df58ba9a"
   integrity sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==
 
-caniuse-lite@^1.0.30001406, caniuse-lite@^1.0.30001503:
+caniuse-lite@^1.0.30001406:
+  version "1.0.30001505"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001505.tgz#10a343e49d31cbbfdae298ef73cb0a9f46670dc5"
+  integrity sha512-jaAOR5zVtxHfL0NjZyflVTtXm3D3J9P15zSJ7HmQF8dSKGA6tqzQq+0ZI3xkjyQj46I4/M0K2GbMpcAFOcbr3A==
+
+caniuse-lite@^1.0.30001503:
   version "1.0.30001504"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001504.tgz#eaf77e5c852dfa5f82c4924468c30602ac53744a"
   integrity sha512-5uo7eoOp2mKbWyfMXnGO9rJWOGU8duvzEiYITW+wivukL7yHH4gX9yuRaobu6El4jPxo6jKZfG+N6fB621GD/Q==
@@ -3640,13 +3645,6 @@ neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
-
-nest-next@^10.1.0:
-  version "10.1.0"
-  resolved "https://registry.yarnpkg.com/nest-next/-/nest-next-10.1.0.tgz#71f04061d369df3525cf38016ae78a24e6aef120"
-  integrity sha512-DmKZdYsfhF9lamnz1Nfj/mG3Ei4zOiWnlO6Vjvvi8PljwPdVJL8EaiPo7UV3CjmdIPIJ0Icu8rBkF59Z3E87fA==
-  dependencies:
-    rxjs "^7.5.5"
 
 next@^13.4.6:
   version "13.4.6"
