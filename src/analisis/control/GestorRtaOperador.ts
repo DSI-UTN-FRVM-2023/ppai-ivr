@@ -1,35 +1,54 @@
+import { DominioService } from 'src/dominio.service';
 import { Accion } from '../entity/Accion';
 import { CategoriaLlamada } from '../entity/CategoriaLlamada';
-import { Estado } from '../entity/Estado';
+import { Estado, NombresEstado } from '../entity/Estado';
 import { InformacionCliente } from '../entity/InformacionCliente';
 import { OpcionLlamada } from '../entity/OpcionLlamada';
 import { SubOpcionLlamada } from '../entity/SubOpcionLlamada';
 import { Validacion } from '../entity/Validacion';
 import { IGestorRtaOperador } from './interfaces/IGestorRtaOperador';
+import { Inject } from '@nestjs/common';
+import { Llamada } from '../entity/Llamada';
 
 export class GestorRtaOperador implements IGestorRtaOperador {
-  estadoEnCurso: Estado;
-  nombreCliente: string;
-  listaValidaciones: Validacion[];
-  categoriaLlamada: CategoriaLlamada;
-  opcionSeleccionada: OpcionLlamada;
-  subOpcionSeleccionada: SubOpcionLlamada;
-  listaIngresoDatosParaValidar: InformacionCliente[];
-  respuestaOperador: string;
-  accionesRequeridas: Accion[];
-  seleccionAccionARealizar: Accion;
-  fechaHoraActual: Date;
-  estadoFinalizado: Estado;
+  #llamadaEnCurso: Llamada;
+  #estadoEnCurso: Estado;
+  #nombreCliente: string;
+  #listaValidaciones: Validacion[];
+  #categoriaLlamada: CategoriaLlamada;
+  #opcionSeleccionada: OpcionLlamada;
+  #subOpcionSeleccionada: SubOpcionLlamada;
+  #listaIngresoDatosParaValidar: InformacionCliente[];
+  #respuestaOperador: string;
+  #accionesRequeridas: Accion[];
+  #seleccionAccionARealizar: Accion;
+  #fechaHoraActual: Date;
+  #estadoFinalizado: Estado;
+
+  constructor(
+    @Inject(DominioService)
+    private readonly dominio: DominioService,
+  ) {
+    // Crear llamada en curso por falta de persistencia.
+    // this.#llamadaEnCurso = new Llamada();
+
+    this.nuevaRespuestaOperador();
+  }
 
   nuevaRespuestaOperador(): void {
-    throw new Error('Method not implemented.');
+    this.recibirLlamada();
   }
+
   recibirLlamada(): void {
-    throw new Error('Method not implemented.');
+    this.#estadoEnCurso = this.buscarEstadoEnCurso();
   }
-  buscarEstadoEnCurso(): void {
-    throw new Error('Method not implemented.');
+
+  buscarEstadoEnCurso(): Estado {
+    for (const estado of this.dominio.estados) {
+      if (estado.esEnCurso()) return estado;
+    }
   }
+
   buscarDatosLlamada(): void {
     throw new Error('Method not implemented.');
   }

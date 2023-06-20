@@ -1,5 +1,9 @@
 import { OpcionLlamada } from './OpcionLlamada';
 
+export enum NombresCategoria {
+  ROBO = 'Robo',
+}
+
 export class CategoriaLlamada {
   #nombre: string;
 

@@ -1,3 +1,8 @@
+export enum NombresEstado {
+  EN_CURSO = 'En Curso',
+  FINALIZADO = 'Finalizado',
+}
+
 export class Estado {
   #nombre: string;
 
@@ -14,7 +19,7 @@ export class Estado {
   }
 
   esEnCurso(): boolean {
-    return false;
+    return this.#nombre === NombresEstado.EN_CURSO;
   }
 
   esFinalizado(): boolean {
