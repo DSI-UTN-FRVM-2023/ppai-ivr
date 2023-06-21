@@ -51,6 +51,7 @@ export class DominioService {
     }
 
     // Opciones de validacion para los ultimos 4 numeros de la tarjeta
+    // TODO: MIGRAR LA LOGICA PARA QUE SEA UN COMBOBOX CON LAS OPCIONES DE VALIDACION
     const opcionesNumTarjeta = [
         new OpcionValidacion('1234', false),
         new OpcionValidacion('4321', false),
