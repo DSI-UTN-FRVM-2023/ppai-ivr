@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { ViewService } from './view.service';
 import { Request, Response } from 'express';
 import { GestorRtaOperador } from '../control/GestorRtaOperador';

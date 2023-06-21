@@ -2,8 +2,6 @@ import { DominioService } from '../../dominio.service';
 import { Accion } from '../entity/Accion';
 import { CategoriaLlamada } from '../entity/CategoriaLlamada';
 import { Estado } from '../entity/Estado';
-import { InformacionCliente } from '../entity/InformacionCliente';
-import { Validacion } from '../entity/Validacion';
 import { IGestorRtaOperador } from './interfaces/IGestorRtaOperador';
 import { Inject } from '@nestjs/common';
 import { Llamada } from '../entity/Llamada';
