@@ -18,7 +18,13 @@ const SidebarTask = ({ info }) => {
         </svg>
       </div>
       <div className="col-span-5">
-        <h2 className="text-slate-200 text-l font-bold">Entrante: {info.nombreCliente}</h2>
+        <h2 className="text-slate-200 text-l font-bold">
+          Cliente: {info.nombreCliente}
+        </h2>
+        <div className="flex gap-2">
+          <span className="animate-ping inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75 my-auto"></span>
+          <p className="text-slate-200 text-sm">En Curso</p>
+        </div>
       </div>
     </div>
   );

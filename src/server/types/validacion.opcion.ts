@@ -1,5 +1,5 @@
 export type ValidacionOpcionOperador = {
-  dato: string;
-  validacion: string;
+  datoValidacion: string;
+  nombreValidacion: string;
   correcta?: boolean;
 };

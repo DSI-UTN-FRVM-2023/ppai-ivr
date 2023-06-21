@@ -1,3 +1,4 @@
+import { ListaValidacion } from '../../types/lista.validacion';
 import { SubOpcionLlamada } from './SubOpcionLlamada';
 import { Validacion } from './Validacion';
 
@@ -56,11 +57,18 @@ export class OpcionLlamada {
   /**
    * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
    */
-  getValidaciones(): string[] {
-    return (
-      this.#validacionesRequeridas?.map((validacion) =>
-        validacion.getMensajeValidacion(),
-      ) ?? []
+  getValidaciones(): ListaValidacion[] {
+    const listaValidacion = this.#validacionesRequeridas?.map<ListaValidacion>(
+      (validacion) => {
+        return {
+          nombreValidacion: validacion.getMensajeValidacion(),
+          opciones: validacion
+            .getOpcionesValidacion()
+            .map((opcion) => opcion.getDescripcion()),
+        };
+      },
     );
+
+    return listaValidacion;
   }
 }

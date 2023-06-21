@@ -101,6 +101,10 @@ export class DominioService {
     }
 
     // Crear llamada del dominio
+    // Observación 3:
+    //  La llamada, categoría, opción y sub-opcion (si corresponde) son recibidas desde el CU 1 Registrar Llamada, donde
+    // la llamada fue creada al momento de iniciarse y asociada al cliente identificado, y la categoría y opciones fueron
+    // seleccionadas por el cliente.
     const cliente = new Cliente(
       '43601084',
       'Guido Andrés Serniotti',

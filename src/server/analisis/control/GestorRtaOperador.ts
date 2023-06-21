@@ -6,17 +6,23 @@ import { IGestorRtaOperador } from './interfaces/IGestorRtaOperador';
 import { Inject } from '@nestjs/common';
 import { Llamada } from '../entity/Llamada';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
+import { ListaValidacion } from '../../types/lista.validacion';
 
 export class GestorRtaOperador implements IGestorRtaOperador {
+  /** Puntero hacia la instancia de la llamada en curso (proveniente del CU1) */
   #llamadaEnCurso: Llamada;
+
+  /** Puntero hacia la instancia del estado "En Curso". */
   #estadoEnCurso: Estado;
+
+  /** Nombre del cliente de la llamada en curso. */
   #nombreCliente: string;
 
   /** Validaciones a realizar sobre la llamada del cliente (opcion seleccionada) */
-  #listaValidacionesOpcion: string[];
+  #listaValidacionesOpcion: ListaValidacion[];
 
   /** Validaciones a realizar sobre la llamada del cliente (subopcion seleccionada) */
-  #listaValidacionesSubOpcion: string[];
+  #listaValidacionesSubOpcion: ListaValidacion[];
 
   #categoriaLlamada: CategoriaLlamada;
 
@@ -32,9 +38,15 @@ export class GestorRtaOperador implements IGestorRtaOperador {
   /** Listado con todas las opciones de validacion que el operador ingresa */
   #listaIngresoDatosParaValidar: ValidacionOpcionOperador[] = [];
 
+  /** La respuesta del operador a la llamada. */
   #respuestaOperador: string;
-  #accionesRequeridas: Accion[];
-  #seleccionAccionARealizar: Accion;
+
+  /** Listado de todas las acciones disponibles para selección. */
+  accionesRequeridas: string[];
+
+  /** La selección del operador ante la acción a realizar. */
+  #seleccionAccionARealizar: string;
+
   #fechaHoraActual: Date;
   #estadoFinalizado: Estado;
 
@@ -107,11 +119,11 @@ export class GestorRtaOperador implements IGestorRtaOperador {
   ): ValidacionOpcionOperador[] {
     // Buscar si este dato ya fue ingresado.
     const dato = this.#listaIngresoDatosParaValidar?.find(
-      (dato) => dato.validacion === datoValidacion.validacion,
+      (dato) => dato.nombreValidacion === datoValidacion.nombreValidacion,
     );
 
     // Modificarlo, y si no agregarlo.
-    if (dato) dato.dato = datoValidacion.dato;
+    if (dato) dato.datoValidacion = datoValidacion.datoValidacion;
     else this.#listaIngresoDatosParaValidar.push(datoValidacion);
 
     // Validar el dato con la información del cliente.
@@ -141,15 +153,30 @@ export class GestorRtaOperador implements IGestorRtaOperador {
     return this.#listaIngresoDatosParaValidar;
   }
 
-  tomarIngresoRespuesta(): void {
-    throw new Error('Method not implemented.');
+  /**
+   * Toma el ingreso de una respuesta descriptiva del operador ante la llamada y busca las acciones requeridas.
+   *
+   * @param {string} respuestaOperador La respuesta del operador.
+   */
+  tomarIngresoRespuesta(respuestaOperador: string): void {
+    this.#respuestaOperador = respuestaOperador;
+
+    this.accionesRequeridas = this.buscarAccionesRequeridas();
   }
-  buscarAccionesRequeridas(): void {
-    throw new Error('Method not implemented.');
+
+  /**
+   * Busca todas las acciones posibles de efectuar en el dominio.
+   *
+   * @returns {string[]} Listado de acciones posibles.
+   */
+  buscarAccionesRequeridas(): string[] {
+    return this.dominio.acciones.map((accion) => accion.getDescripcion());
   }
-  tomarSeleccionAccion(): void {
-    throw new Error('Method not implemented.');
+
+  tomarSeleccionAccion(accionSeleccionada: string): void {
+    this.#seleccionAccionARealizar = accionSeleccionada;
   }
+
   tomarConfirmacionOperacion(): void {
     throw new Error('Method not implemented.');
   }

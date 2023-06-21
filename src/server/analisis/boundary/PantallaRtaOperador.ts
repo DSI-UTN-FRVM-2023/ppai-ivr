@@ -32,6 +32,23 @@ export class PantallaRtaOperador {
     return resultado;
   }
 
+  @Post('/boundary/tomarIngresoRespuesta')
+  async tomarIngresoRespuesta(
+    @Body() respuesta: { respuestaOperador: string },
+  ) {
+    this.gestor.tomarIngresoRespuesta(respuesta.respuestaOperador);
+  }
+
+  @Get('/boundary/mostrarAccionParaSeleccion')
+  async mostrarAccionParaSeleccion() {
+    return this.gestor.accionesRequeridas;
+  }
+
+  @Post('/boundary/tomarSeleccionAccion')
+  async tomarSeleccionAccion(@Body() accion: { accionSeleccionada: string }) {
+    this.gestor.tomarSeleccionAccion(accion.accionSeleccionada);
+  }
+
   @Get('/')
   index(@Req() req: Request, @Res() res: Response) {
     const info = this.gestor.nuevaRespuestaOperador();

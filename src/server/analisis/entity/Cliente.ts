@@ -56,11 +56,11 @@ export class Cliente {
     for (const validacion of listaDatos) {
       for (const informacion of this.#info) {
         // Es la validación que dice el dato tener?
-        if (informacion.esValidacion(validacion.validacion)) {
+        if (informacion.esValidacion(validacion.nombreValidacion)) {
           // Verificar el valor del dato de validación
           // TODO: VERIFICAR EL TEMA DEL METODO *esCorrecta() A LA OPCIONVALIDACION
           validacion['correcta'] = informacion.esInformacionCorrecta(
-            validacion.dato,
+            validacion.datoValidacion,
           );
         }
       }

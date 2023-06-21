@@ -1,3 +1,4 @@
+import { ListaValidacion } from '../../types/lista.validacion';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 import { Accion } from './Accion';
 import { CambioEstadoLlamada } from './CambioEstadoLlamada';
@@ -145,14 +146,14 @@ export class Llamada {
   /**
    * Busca las validaciones de la opcion seleccionada de la llamada.
    */
-  getValidacionesOpcionSeleccionada(): string[] {
+  getValidacionesOpcionSeleccionada(): ListaValidacion[] {
     return this.#opcionSeleccionada?.getValidaciones();
   }
 
   /**
    * Busca las validaciones de la subopcion seleccionada de la llamada.
    */
-  getValidacionesSubOpcionSeleccionada(): string[] {
+  getValidacionesSubOpcionSeleccionada(): ListaValidacion[] {
     return this.#subOpcionSeleccionada?.getValidaciones();
   }
 }

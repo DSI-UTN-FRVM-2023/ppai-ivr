@@ -15,11 +15,11 @@ export interface IGestorRtaOperador {
 
   validarInformacionCliente(): void;
 
-  tomarIngresoRespuesta(): void;
+  tomarIngresoRespuesta(respuestaOperador: string): void;
 
   buscarAccionesRequeridas(): void;
 
-  tomarSeleccionAccion(): void;
+  tomarSeleccionAccion(accionSeleccionada: string): void;
 
   tomarConfirmacionOperacion(): void;
 

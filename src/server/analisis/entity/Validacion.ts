@@ -20,4 +20,12 @@ export class Validacion {
   getMensajeValidacion(): string {
     return this.#mensajeValidacion;
   }
+
+  setOpcionesValidacion(opcionesValidacion: OpcionValidacion[]): void {
+    this.#opcionesValidacion = opcionesValidacion;
+  }
+
+  getOpcionesValidacion(): OpcionValidacion[] {
+    return this.#opcionesValidacion;
+  }
 }

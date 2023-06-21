@@ -1,3 +1,4 @@
+import { ListaValidacion } from '../../types/lista.validacion';
 import { Validacion } from './Validacion';
 
 export enum NombresSubOpcionLlamada {
@@ -49,11 +50,18 @@ export class SubOpcionLlamada {
   /**
    * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
    */
-  getValidaciones(): string[] {
-    return (
-      this.#validacionRequerida?.map((validacion) =>
-        validacion.getMensajeValidacion(),
-      ) ?? []
+  getValidaciones(): ListaValidacion[] {
+    const listaValidacion = this.#validacionRequerida?.map<ListaValidacion>(
+      (validacion) => {
+        return {
+          nombreValidacion: validacion.getMensajeValidacion(),
+          opciones: validacion
+            .getOpcionesValidacion()
+            .map((opcion) => opcion.getDescripcion()),
+        };
+      },
     );
+
+    return listaValidacion;
   }
 }
