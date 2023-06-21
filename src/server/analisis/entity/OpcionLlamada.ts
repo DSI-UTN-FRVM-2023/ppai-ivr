@@ -1,4 +1,5 @@
 import { SubOpcionLlamada } from './SubOpcionLlamada';
+import { Validacion } from './Validacion';
 
 export enum NombresOpcionLlamada {
   ROBO_TARJETA_NUEVA = 'Informar robo y solicitar tarjeta nueva',
@@ -10,15 +11,18 @@ export class OpcionLlamada {
   #nroOrden: number;
 
   #subOpcionLlamada: SubOpcionLlamada[];
+  #validacionesRequeridas?: Validacion[];
 
   constructor(
     nombre: string,
     nroOrden: number,
     subOpcionLlamada: SubOpcionLlamada[],
+    validacionesRequeridas?: Validacion[],
   ) {
     this.#nombre = nombre;
     this.#nroOrden = nroOrden;
     this.#subOpcionLlamada = subOpcionLlamada;
+    this.#validacionesRequeridas = validacionesRequeridas;
   }
 
   setNombre(nombre: string): void {
@@ -43,5 +47,20 @@ export class OpcionLlamada {
 
   getSubOpcionLlamada(): SubOpcionLlamada[] {
     return this.#subOpcionLlamada;
+  }
+
+  setValidaciones(validaciones: Validacion[]): void {
+    this.#validacionesRequeridas = validaciones;
+  }
+
+  /**
+   * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
+   */
+  getValidaciones(): string[] {
+    return (
+      this.#validacionesRequeridas?.map((validacion) =>
+        validacion.getMensajeValidacion(),
+      ) ?? []
+    );
   }
 }

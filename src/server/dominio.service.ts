@@ -13,11 +13,18 @@ import {
   NombresOpcionLlamada,
   OpcionLlamada,
 } from './analisis/entity/OpcionLlamada';
+import { Llamada } from './analisis/entity/Llamada';
+import { Cliente } from './analisis/entity/Cliente';
+import { Validacion } from './analisis/entity/Validacion';
+import { OpcionValidacion } from './analisis/entity/OpcionValidacion';
+import { InformacionCliente } from './analisis/entity/InformacionCliente';
 
 @Injectable()
 export class DominioService {
   readonly #logger = new Logger(DominioService.name);
 
+  llamadaEnCurso: Llamada = null;
+  categoriaLlamadaEnCurso: CategoriaLlamada = null;
   estados: Estado[] = [];
   acciones: Accion[] = [];
   categorias: CategoriaLlamada[] = [];
@@ -43,6 +50,26 @@ export class DominioService {
       this.acciones.push(new Accion(descripcion));
     }
 
+    // Opciones de validacion para los ultimos 4 numeros de la tarjeta
+    const opcionesNumTarjeta = [
+        new OpcionValidacion('1234', false),
+        new OpcionValidacion('4321', false),
+        new OpcionValidacion('5678', true),
+        new OpcionValidacion('8765', false),
+      ],
+      opcionesCodSeguridad = [
+        new OpcionValidacion('123', false),
+        new OpcionValidacion('321', false),
+        new OpcionValidacion('456', true),
+        new OpcionValidacion('654', false),
+      ];
+
+    // Crear validaciones de ejemplo.
+    const validacionesSubOpcion = [
+      new Validacion('Ultimos 4 números de la tarjeta', opcionesNumTarjeta),
+      new Validacion('Código de seguridad de la tarjeta', opcionesCodSeguridad),
+    ];
+
     // Instanciar categorias, opciones y subopciones
     for (const categoria of Object.values(NombresCategoria)) {
       this.#logger.debug(`Creando categoría: ${categoria}`);
@@ -53,7 +80,9 @@ export class DominioService {
       for (const subopcion of Object.values(NombresSubOpcionLlamada)) {
         this.#logger.debug(`Creando subopción de ${categoria}: ${subopcion}`);
 
-        subopciones.push(new SubOpcionLlamada(subopcion, i));
+        subopciones.push(
+          new SubOpcionLlamada(subopcion, i, validacionesSubOpcion),
+        );
         i++;
       }
 
@@ -69,5 +98,40 @@ export class DominioService {
 
       this.categorias.push(new CategoriaLlamada(categoria, opciones));
     }
+
+    // Crear llamada del dominio
+    const cliente = new Cliente(
+      '43601084',
+      'Guido Andrés Serniotti',
+      '+543535123456',
+    );
+
+    // Darle información con las validaciones para que se pueda validar después.
+    const numeroTarjeta = new InformacionCliente(
+        '5678',
+        validacionesSubOpcion[0],
+        opcionesNumTarjeta[2],
+      ),
+      codSeguridad = new InformacionCliente(
+        '456',
+        validacionesSubOpcion[1],
+        opcionesCodSeguridad[2],
+      );
+
+    cliente.setInformacion([numeroTarjeta, codSeguridad]);
+
+    // Asignar la llamada en curso.
+    this.llamadaEnCurso = new Llamada(cliente);
+
+    // Darle opciones y subopciones de selección, como si ya las hubiese seleccionado (para nuestro CU)
+    const opcionSeleccionada = this.categorias[0].getOpcion()[0];
+
+    this.llamadaEnCurso.setOpcionSeleccionada(opcionSeleccionada);
+    this.llamadaEnCurso.setSubOpcionSeleccionada(
+      opcionSeleccionada.getSubOpcionLlamada()[0],
+    );
+
+    // Asignar categoria de llamada iniciada.
+    this.categoriaLlamadaEnCurso = this.categorias[0];
   }
 }

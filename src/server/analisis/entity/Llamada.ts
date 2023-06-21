@@ -1,39 +1,30 @@
+import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 import { Accion } from './Accion';
 import { CambioEstadoLlamada } from './CambioEstadoLlamada';
 import { Cliente } from './Cliente';
-import { Estado } from './Estado';
+import { Estado, NombresEstado } from './Estado';
 import { OpcionLlamada } from './OpcionLlamada';
 import { SubOpcionLlamada } from './SubOpcionLlamada';
 
 export class Llamada {
-  #descripcionOperador: string;
-  #detalleAccionRequerida;
-  #duracion: number;
+  #descripcionOperador?: string;
+  #detalleAccionRequerida?: string; // TODO: Revisar el tipo
+  #duracion?: number;
 
+  #cliente: Cliente;
   #opcionSeleccionada?: OpcionLlamada;
   #subOpcionSeleccionada?: SubOpcionLlamada;
-  #cliente: Cliente;
   #cambioEstado: CambioEstadoLlamada[];
   #estadoActual: Estado;
   #accionRequerida?: Accion;
 
-  constructor(
-    descripcionOperador: string,
-    detalleAccionRequerida,
-    duracion: number,
-    cliente: Cliente,
-    opcionSeleccionada?: OpcionLlamada,
-    subOpcionSeleccionada?: SubOpcionLlamada,
-  ) {
-    this.#descripcionOperador = descripcionOperador;
-    this.#detalleAccionRequerida = detalleAccionRequerida;
-    this.#duracion = duracion;
+  constructor(cliente: Cliente) {
     this.#cliente = cliente;
-    this.#opcionSeleccionada = opcionSeleccionada;
-    this.#subOpcionSeleccionada = subOpcionSeleccionada;
-    this.#cambioEstado = [];
-    this.#estadoActual = null; // TODO: Definir estado inicial
-    this.#accionRequerida = null;
+
+    const estadoInicial = new Estado(NombresEstado.INICIADA);
+
+    this.#cambioEstado = [new CambioEstadoLlamada(new Date(), estadoInicial)];
+    this.#estadoActual = estadoInicial;
   }
 
   setDescripcionOperador(descripcionOperador: string): void {
@@ -108,16 +99,39 @@ export class Llamada {
     return this.#accionRequerida;
   }
 
-  verificarLlamadaTomadaPorOperador(): boolean {
-    return false;
+  /**
+   * Cambia el estado de una llamada Iniciada a En Curso al ser tomada por un operador.
+   *
+   * @param {Estado} estadoEnCurso La instancia del estado "En Curso".
+   */
+  tomadaPorOperador(estadoEnCurso: Estado): void {
+    this.#estadoActual = estadoEnCurso;
+
+    // Crear nuevo cambio de estado.
+    const cambioEstado = new CambioEstadoLlamada(new Date(), estadoEnCurso);
+
+    // Agregar cambio de estado
+    this.#cambioEstado.push(cambioEstado);
   }
 
+  /**
+   * Retorna el nombre del cliente de la llamada.
+   *
+   * @returns {string} Nombre del cliente.
+   */
   getNombreCliente(): string {
-    return '';
+    return this.#cliente.getNombreCompleto();
   }
 
-  verificarInformacionCorrectaCliente(): boolean {
-    return false;
+  /**
+   * Busca entre la información registrada del cliente para comparar contra el ingreso de datos del operador
+   *
+   * @param {ValidacionOpcionOperador[]} listaDatos Lista de datos del operador.
+   */
+  verificarInformacionCorrectaCliente(
+    listaDatos: ValidacionOpcionOperador[],
+  ): ValidacionOpcionOperador[] {
+    return this.#cliente.esInformacionCorrecta(listaDatos);
   }
 
   finalizarLlamada(): void {
@@ -126,5 +140,19 @@ export class Llamada {
 
   calcularDuracion(): number {
     return 0;
+  }
+
+  /**
+   * Busca las validaciones de la opcion seleccionada de la llamada.
+   */
+  getValidacionesOpcionSeleccionada(): string[] {
+    return this.#opcionSeleccionada?.getValidaciones();
+  }
+
+  /**
+   * Busca las validaciones de la subopcion seleccionada de la llamada.
+   */
+  getValidacionesSubOpcionSeleccionada(): string[] {
+    return this.#subOpcionSeleccionada?.getValidaciones();
   }
 }

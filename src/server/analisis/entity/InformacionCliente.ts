@@ -7,9 +7,14 @@ export class InformacionCliente {
   #opcionCorrecta?: OpcionValidacion;
   #validacion: Validacion;
 
-  constructor(datoAValidar: string, validacion: Validacion) {
+  constructor(
+    datoAValidar: string,
+    validacion: Validacion,
+    opcionCorrecta?: OpcionValidacion,
+  ) {
     this.#datoAValidar = datoAValidar;
     this.#validacion = validacion;
+    this.#opcionCorrecta = opcionCorrecta;
   }
 
   setDatoAValidar(datoAValidar: string): void {
@@ -36,11 +41,11 @@ export class InformacionCliente {
     this.#validacion = validacion;
   }
 
-  esValidacion(): boolean {
-    return false;
+  esValidacion(nombreValidacion: string): boolean {
+    return this.#validacion.getMensajeValidacion() === nombreValidacion;
   }
 
-  esInformacionCorrecta(): boolean {
-    return false;
+  esInformacionCorrecta(dato: string): boolean {
+    return this.#datoAValidar === dato;
   }
 }

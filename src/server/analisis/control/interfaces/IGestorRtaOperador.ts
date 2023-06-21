@@ -1,3 +1,5 @@
+import { ValidacionOpcionOperador } from '../../../types/validacion.opcion';
+
 export interface IGestorRtaOperador {
   nuevaRespuestaOperador(): void;
 
@@ -7,7 +9,7 @@ export interface IGestorRtaOperador {
 
   buscarDatosLlamada(): void;
 
-  tomarIngresoDatoValidacion(): void;
+  tomarIngresoDatoValidacion(datoValidacion: ValidacionOpcionOperador): void;
 
   buscarValidaciones(): void;
 

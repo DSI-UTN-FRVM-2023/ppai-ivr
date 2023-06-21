@@ -1,4 +1,5 @@
 export enum NombresEstado {
+  INICIADA = 'Iniciada',
   EN_CURSO = 'En Curso',
   FINALIZADO = 'Finalizado',
 }

@@ -31,7 +31,7 @@ export class CategoriaLlamada {
   }
 
   getCategoriaOpcionSubOpcion(): void {
-    throw new Error('Method not implemented.');
+    return;
   }
 
   buscarValidaciones(): void {

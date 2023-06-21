@@ -1,15 +1,23 @@
+import { OpcionValidacion } from './OpcionValidacion';
+
 export class Validacion {
-  #nombre: string;
+  #mensajeValidacion: string;
 
-  constructor(nombre: string) {
-    this.#nombre = nombre;
+  #opcionesValidacion: OpcionValidacion[];
+
+  constructor(
+    mensajeValidacion: string,
+    opcionesValidacion: OpcionValidacion[],
+  ) {
+    this.#mensajeValidacion = mensajeValidacion;
+    this.#opcionesValidacion = opcionesValidacion;
   }
 
-  setNombre(nombre: string): void {
-    this.#nombre = nombre;
+  setMensajeValidacion(mensajeValidacion: string): void {
+    this.#mensajeValidacion = mensajeValidacion;
   }
 
-  getNombre(): string {
-    return this.#nombre;
+  getMensajeValidacion(): string {
+    return this.#mensajeValidacion;
   }
 }

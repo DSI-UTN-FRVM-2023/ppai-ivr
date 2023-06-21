@@ -12,9 +12,14 @@ export class SubOpcionLlamada {
 
   #validacionRequerida?: Validacion[];
 
-  constructor(nombre: string, nroOrden: number) {
+  constructor(
+    nombre: string,
+    nroOrden: number,
+    validacionesRequeridas?: Validacion[],
+  ) {
     this.#nombre = nombre;
     this.#nroOrden = nroOrden;
+    this.#validacionRequerida = validacionesRequeridas;
   }
 
   setNombre(nombre: string): void {
@@ -39,5 +44,16 @@ export class SubOpcionLlamada {
 
   getValidacionRequerida(): Validacion[] | undefined {
     return this.#validacionRequerida;
+  }
+
+  /**
+   * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
+   */
+  getValidaciones(): string[] {
+    return (
+      this.#validacionRequerida?.map((validacion) =>
+        validacion.getMensajeValidacion(),
+      ) ?? []
+    );
   }
 }

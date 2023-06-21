@@ -1,6 +1,4 @@
-import Image from 'next/image';
-
-const SidebarTask = () => {
+const SidebarTask = ({ info }) => {
   return (
     <div className="w-full bg-slate-800 grid grid-cols-6 py-6 px-4 cursor-pointer">
       <div className="m-auto">
@@ -20,8 +18,7 @@ const SidebarTask = () => {
         </svg>
       </div>
       <div className="col-span-5">
-        <h2 className="text-slate-200 text-l font-bold">Entrante: Guido Serniotti</h2>
-        <p className="text-slate-400 text-sm">+54 9 3534 12-3456</p>
+        <h2 className="text-slate-200 text-l font-bold">Entrante: {info.nombreCliente}</h2>
       </div>
     </div>
   );
