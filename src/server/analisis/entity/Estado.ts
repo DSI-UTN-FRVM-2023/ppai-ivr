@@ -24,6 +24,6 @@ export class Estado {
   }
 
   esFinalizado(): boolean {
-    return false;
+    return this.#nombre === NombresEstado.FINALIZADO;
   }
 }

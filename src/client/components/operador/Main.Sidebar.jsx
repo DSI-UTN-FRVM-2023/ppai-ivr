@@ -7,6 +7,15 @@ const MainSidebar = ({ info }) => {
 
   const [acciones, setAcciones] = useState([]);
 
+  const [confirmacionOperador, setConfirmacionOperador] = useState(false);
+
+  /**
+   * Toma el ingreso de un dato de validación por parte del operador.
+   * 
+   * @param {*} valorValidacion El valor de la opcion seleccionada.
+   * @param {*} nombreValidacion El nombre de la validación donde se seleccionó la opción.
+   * @param {*} setEsCorrecto Puntero a la función de si es correcta o no.
+   */
   async function tomarIngresoDatoValidacion(
     valorValidacion,
     nombreValidacion,
@@ -14,7 +23,7 @@ const MainSidebar = ({ info }) => {
   ) {
     const { data } = await axios({
       method: 'POST',
-      url: `/boundary/${tomarIngresoDatoValidacion.name}`,
+      url: `/boundary/tomarIngresoDatoValidacion`,
       data: {
         datoValidacion: valorValidacion,
         nombreValidacion,
@@ -29,6 +38,18 @@ const MainSidebar = ({ info }) => {
     );
 
     setDatosValidacion(data);
+
+    solicitarRespuestaOperador();
+  }
+
+  /**
+   * Solicita al operador ingrese una respuesta.
+   */
+  async function solicitarRespuestaOperador() {
+    await axios({
+      method: 'GET',
+      url: '/boundary/solicitarRespuestaOperador',
+    });
   }
 
   async function tomarIngresoRespuesta(respuestaOperador) {
@@ -52,16 +73,45 @@ const MainSidebar = ({ info }) => {
     setAcciones(acciones);
   }
 
-  async function tomarSeleccionAccion(accionSeleccionada) {
+  async function tomarSeleccionAccion(accionARealizar) {
     await axios({
       method: 'POST',
       url: '/boundary/tomarSeleccionAccion',
       data: {
-        accionSeleccionada,
+        accionSeleccionada: accionARealizar,
       },
     });
 
-    //solicitarConfirmacionOperacion();
+    solicitarConfirmacionOperacion();
+  }
+
+  async function solicitarConfirmacionOperacion() {
+    const { data } = await axios({
+      method: 'GET',
+      url: '/boundary/solicitarConfirmacionOperacion',
+    });
+
+    setConfirmacionOperador(data);
+  }
+
+  async function tomarConfirmacionOperacion() {
+    try {
+      const { data: mensajeConfirmacion } = await axios({
+        method: 'POST',
+        url: '/boundary/tomarConfirmacionOperacion',
+      });
+
+      mostrarMensajeAccionRegistrada(mensajeConfirmacion);
+    } catch (e) {
+      alert(e?.response?.data?.message);
+    }
+  }
+
+  async function mostrarMensajeAccionRegistrada(mensaje) {
+    alert(mensaje);
+
+    // Redireccionar a /fin
+    window.location.href = '/fin';
   }
 
   return (
@@ -139,9 +189,13 @@ const MainSidebar = ({ info }) => {
               <h2 className="text-md font-bold text-slate-100">
                 Seleccione una Acción
               </h2>
-              <select className="w-full" defaultValue="null" onChange={(e) => {
-                tomarSeleccionAccion(e.target.value);
-              }}>
+              <select
+                className="w-full"
+                defaultValue="null"
+                onChange={(e) => {
+                  tomarSeleccionAccion(e.target.value);
+                }}
+              >
                 <option value="null" disabled>
                   Seleccione una
                 </option>
@@ -151,6 +205,13 @@ const MainSidebar = ({ info }) => {
                   </option>
                 ))}
               </select>
+
+              {/** Si ya estamos para la confirmación, mostrar el botón de confirmar. */}
+              {confirmacionOperador ? (
+                <button name="botonConfirmacion" className="w-full my-4 p-2 rounded-xl bg-green-600 text-white font-bold" onClick={(e) => tomarConfirmacionOperacion()}>
+                  Confirmar Respuesta
+                </button>
+              ) : null}
             </>
           ) : null}
         </div>

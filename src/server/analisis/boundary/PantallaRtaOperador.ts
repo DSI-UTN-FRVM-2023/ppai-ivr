@@ -6,6 +6,26 @@ import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 
 @Controller('/')
 export class PantallaRtaOperador {
+  #nombreCliente: string;
+
+  #categoriaSeleccionada: string;
+
+  #opcionSeleccionada: string;
+
+  #nombreValidacionesOpcion: string[];
+  #radioBtnValidacionesOpcion: string[];
+
+  #subOpcionSeleccionada: string;
+
+  #nombreValidacionesSubOpcion: string[];
+  #radioBtnValidacionesSubOpcion: string[];
+
+  #respuestaOperador: string;
+
+  #accionARealizar: string;
+
+  #botonConfirmacion: string;
+
   constructor(
     private readonly view: ViewService,
     private readonly gestor: GestorRtaOperador,
@@ -17,7 +37,7 @@ export class PantallaRtaOperador {
   }
 
   @Get('/boundary/initial')
-  async initial(): Promise<any> {
+  async mostrarDatosLlamadaYValidacionesRequeridas(): Promise<any> {
     const info = this.gestor.nuevaRespuestaOperador();
 
     return info;
@@ -32,6 +52,11 @@ export class PantallaRtaOperador {
     return resultado;
   }
 
+  @Get('/boundary/solicitarRespuestaOperador')
+  async solicitarRespuestaOperador() {
+    return;
+  }
+
   @Post('/boundary/tomarIngresoRespuesta')
   async tomarIngresoRespuesta(
     @Body() respuesta: { respuestaOperador: string },
@@ -40,6 +65,9 @@ export class PantallaRtaOperador {
   }
 
   @Get('/boundary/mostrarAccionParaSeleccion')
+  /**
+   * Este método no lo puede llamar el gestor directamente, pero es llamado de todas formas al finalizar el ingreso de la respuesta.
+   */
   async mostrarAccionParaSeleccion() {
     return this.gestor.accionesRequeridas;
   }
@@ -49,10 +77,26 @@ export class PantallaRtaOperador {
     this.gestor.tomarSeleccionAccion(accion.accionSeleccionada);
   }
 
-  @Get('/')
-  index(@Req() req: Request, @Res() res: Response) {
-    const info = this.gestor.nuevaRespuestaOperador();
+  @Get('/boundary/solicitarConfirmacionOperacion')
+  async solicitarConfirmacionOperacion() {
+    return true;
+  }
 
+  @Post('/boundary/tomarConfirmacionOperacion')
+  async tomarConfirmacionOperacion() {
+    return this.gestor.tomarConfirmacionOperacion();
+  }
+
+  @Get('/boundary/mostrarMensajeAccionRegistrada')
+  /**
+   * Este método no lo puede llamar el gestor directamente, pero es llamado de todas formas al finalizar el ingreso de la respuesta.
+   */
+  async mostrarMensajeAccionRegistrada() {
+    return;
+  }
+
+  @Get(['/', '/fin'])
+  index(@Req() req: Request, @Res() res: Response) {
     return this.view.getServer().getRequestHandler()(req, res);
   }
 }

@@ -9,7 +9,7 @@ import { SubOpcionLlamada } from './SubOpcionLlamada';
 
 export class Llamada {
   #descripcionOperador?: string;
-  #detalleAccionRequerida?: string; // TODO: Revisar el tipo
+  #detalleAccionRequerida?: string;
   #duracion?: number;
 
   #cliente: Cliente;
@@ -135,12 +135,45 @@ export class Llamada {
     return this.#cliente.esInformacionCorrecta(listaDatos);
   }
 
-  finalizarLlamada(): void {
-    return;
+  /**
+   * Finaliza la llamada si está "En Curso", calculando su duración en base a los cambios de estado.
+   *
+   * @param estadoFinalizada
+   */
+  finalizarLlamada(estadoFinalizada: Estado): void {
+    this.#estadoActual = estadoFinalizada;
+
+    // Crear nuevo cambio de estado.
+    const cambioEstado = new CambioEstadoLlamada(new Date(), estadoFinalizada);
+
+    // Agregar cambio de estado
+    this.#cambioEstado.push(cambioEstado);
+
+    // Calcular duracion.
+    this.calcularDuracion();
   }
 
+  /**
+   * Calcula la duración (en segundos) de la llamada.
+   *
+   * @returns {number} Duración de la llamada en segundos.
+   */
   calcularDuracion(): number {
-    return 0;
+    // Buscar cambios de estado entre "En Curso" y "Finalizada".
+    const cambiosEstado = this.#cambioEstado.filter(
+      (cambioEstado) =>
+        cambioEstado.getEstado().getNombre() === NombresEstado.EN_CURSO ||
+        cambioEstado.getEstado().getNombre() === NombresEstado.FINALIZADO,
+    );
+
+    // Si no hay cambios de estado, la duracion es 0.
+    if (cambiosEstado.length === 0) return 0;
+
+    // Si hay un cambio de estado, la duracion es la diferencia entre la fecha de inicio y la fecha actual.
+    this.#duracion =
+      (cambiosEstado[1].getFechaHoraInicio().getTime() -
+        cambiosEstado[0].getFechaHoraInicio().getTime()) /
+      1000;
   }
 
   /**

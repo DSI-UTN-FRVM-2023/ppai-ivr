@@ -1,14 +1,12 @@
 import { DominioService } from '../../dominio.service';
-import { Accion } from '../entity/Accion';
 import { CategoriaLlamada } from '../entity/CategoriaLlamada';
 import { Estado } from '../entity/Estado';
-import { IGestorRtaOperador } from './interfaces/IGestorRtaOperador';
-import { Inject } from '@nestjs/common';
+import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { Llamada } from '../entity/Llamada';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 import { ListaValidacion } from '../../types/lista.validacion';
 
-export class GestorRtaOperador implements IGestorRtaOperador {
+export class GestorRtaOperador {
   /** Puntero hacia la instancia de la llamada en curso (proveniente del CU1) */
   #llamadaEnCurso: Llamada;
 
@@ -24,6 +22,7 @@ export class GestorRtaOperador implements IGestorRtaOperador {
   /** Validaciones a realizar sobre la llamada del cliente (subopcion seleccionada) */
   #listaValidacionesSubOpcion: ListaValidacion[];
 
+  /** La categoria de la llamada según lo que seleccionó el cliente. */
   #categoriaLlamada: CategoriaLlamada;
 
   /** Nombre de la categoria de la llamada */
@@ -47,7 +46,10 @@ export class GestorRtaOperador implements IGestorRtaOperador {
   /** La selección del operador ante la acción a realizar. */
   #seleccionAccionARealizar: string;
 
+  /** La fecha y hora actual del sistema. */
   #fechaHoraActual: Date;
+
+  /** El puntero hacia la instancia de un estado "Finalizado". */
   #estadoFinalizado: Estado;
 
   constructor(
@@ -80,10 +82,18 @@ export class GestorRtaOperador implements IGestorRtaOperador {
     };
   }
 
+  /**
+   * Toma la llamada Iniciada de un cliente y la pasa a En Curso.
+   */
   recibirLlamada(): void {
     this.#estadoEnCurso = this.buscarEstadoEnCurso();
+
+    this.#llamadaEnCurso.tomadaPorOperador(this.#estadoEnCurso);
   }
 
+  /**
+   * Busca entre todos los estados del dominio la instancia del estado "En Curso" y la devuelve.
+   */
   buscarEstadoEnCurso(): Estado {
     for (const estado of this.dominio.estados) {
       if (estado.esEnCurso()) return estado;
@@ -173,23 +183,89 @@ export class GestorRtaOperador implements IGestorRtaOperador {
     return this.dominio.acciones.map((accion) => accion.getDescripcion());
   }
 
+  /**
+   * Toma la seleccion de una acción a realizar por parte del operador.
+   * @param accionSeleccionada
+   */
   tomarSeleccionAccion(accionSeleccionada: string): void {
     this.#seleccionAccionARealizar = accionSeleccionada;
   }
 
-  tomarConfirmacionOperacion(): void {
-    throw new Error('Method not implemented.');
+  /**
+   * Ejecuta el caso de uso 28 y devuelve un mensaje de éxito o fallo dependiendo de su ejecución.
+   */
+  tomarConfirmacionOperacion(): string {
+    // Simular la ejecución del caso de uso 28 con posible fallo.
+    const random = Math.floor(Math.random() * 1000);
+
+    if (random > 500)
+      throw new InternalServerErrorException(
+        `La acción "${
+          this.#seleccionAccionARealizar
+        }" no se pudo ejecutar. Intente de nuevo.`,
+      );
+
+    const mensajeCu28 = `La acción "${
+      this.#seleccionAccionARealizar
+    }" se ejecutó exitosamente.`;
+
+    this.finalizarLlamada();
+
+    return mensajeCu28;
   }
+
+  /**
+   * Obtiene la fecha y hora actual, cambia la llamada en curso a finalizada y finaliza el caso de uso.
+   */
   finalizarLlamada(): void {
-    throw new Error('Method not implemented.');
+    this.#fechaHoraActual = this.getFechaYHoraActual();
+
+    this.buscarEstadoFinalizado();
+
+    this.#llamadaEnCurso.finalizarLlamada(this.#estadoFinalizado);
+
+    this.finCU();
   }
+
+  /**
+   * Obtiene la fecha y hora actual.
+   * @returns {Date} Fecha y hora actual.
+   */
   getFechaYHoraActual(): Date {
-    throw new Error('Method not implemented.');
+    return new Date();
   }
+
+  /**
+   * Busca entre todos los estados del dominio la instancia del estado "Finalizado" y la devuelve.
+   */
   buscarEstadoFinalizado(): void {
-    throw new Error('Method not implemented.');
+    this.#estadoFinalizado = this.dominio.estados.find((estado) =>
+      estado.esFinalizado(),
+    );
   }
+
+  /**
+   * Finaliza el caso de uso y muestra por consola los datos finales del gestor.
+   */
   finCU(): void {
-    throw new Error('Method not implemented.');
+    console.log(`Respuesta del operador registrada.`);
+    console.log(`Cliente: ${this.#nombreCliente}`);
+    console.log(`Categoría: ${this.#nombreCategoriaLlamada}`);
+    console.log(`Opción: ${this.#opcionSeleccionada}`);
+    console.log(`Subopción: ${this.#subOpcionSeleccionada}`);
+    console.log(`Descripcion del Operador: ${this.#respuestaOperador}`);
+    console.log(`Fecha y hora: ${this.#fechaHoraActual}`);
+    console.log(
+      `Estados: (Finalizado) ${this.#estadoFinalizado.getNombre()} (En Curso) ${this.#estadoEnCurso.getNombre()}`,
+    );
+    console.log(
+      `Estados de la Llamada: ${this.#llamadaEnCurso
+        .getCambioEstado()
+        .map((cambioEstado) => cambioEstado.getEstado().getNombre())
+        .join(', ')}`,
+    );
+    console.log(
+      `Duración Llamada: ${this.#llamadaEnCurso.getDuracion()} segundos`,
+    );
   }
 }

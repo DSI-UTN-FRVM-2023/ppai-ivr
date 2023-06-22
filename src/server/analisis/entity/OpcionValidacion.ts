@@ -22,4 +22,8 @@ export class OpcionValidacion {
   getCorrecta(): boolean {
     return this.#correcta;
   }
+
+  esCorrecta(valor: string): boolean {
+    return this.#correcta && this.#descripcion === valor;
+  }
 }

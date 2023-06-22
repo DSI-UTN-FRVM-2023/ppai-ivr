@@ -46,6 +46,8 @@ export class InformacionCliente {
   }
 
   esInformacionCorrecta(dato: string): boolean {
-    return this.#datoAValidar === dato;
+    this.#datoAValidar = dato;
+
+    return this.#opcionCorrecta?.esCorrecta(dato) ?? false;
   }
 }

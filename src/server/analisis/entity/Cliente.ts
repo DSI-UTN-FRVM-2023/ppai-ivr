@@ -58,7 +58,6 @@ export class Cliente {
         // Es la validación que dice el dato tener?
         if (informacion.esValidacion(validacion.nombreValidacion)) {
           // Verificar el valor del dato de validación
-          // TODO: VERIFICAR EL TEMA DEL METODO *esCorrecta() A LA OPCIONVALIDACION
           validacion['correcta'] = informacion.esInformacionCorrecta(
             validacion.datoValidacion,
           );

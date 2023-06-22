@@ -3,31 +3,11 @@ import MainSidebar from '../components/operador/Main.Sidebar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const Home = () => {
-  const [info, setInfo] = useState({});
-
-  useEffect(() => {
-    async function mostrarDatosLlamadaYValidacionesRequeridas() {
-      try {
-        const { data } = await axios({
-          method: 'GET',
-          url: '/boundary/initial',
-        });
-
-        setInfo(data);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    mostrarDatosLlamadaYValidacionesRequeridas();
-  }, []);
-
+const Finalizado = () => {
   return (
     <main>
       <container className="grid grid-cols-3 w-full h-full">
-        <Sidebar info={info} />
-        <MainSidebar info={info} />
+        <Sidebar finalizada={true} />
       </container>
 
       <footer className="fixed bottom-0 left-0 z-20 w-full p-4 bg-white border-t border-gray-200 shadow md:flex md:items-center md:justify-between md:p-6 dark:bg-gray-800 dark:border-gray-600">
@@ -46,4 +26,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Finalizado;
