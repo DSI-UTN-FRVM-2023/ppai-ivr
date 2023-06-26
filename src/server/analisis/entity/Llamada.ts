@@ -104,12 +104,16 @@ export class Llamada {
    * Cambia el estado de una llamada Iniciada a En Curso al ser tomada por un operador.
    *
    * @param {Estado} estadoEnCurso La instancia del estado "En Curso".
+   * @param {Date} fechaYHoraActual Fecha y hora actual.
    */
-  tomadaPorOperador(estadoEnCurso: Estado): void {
+  tomadaPorOperador(estadoEnCurso: Estado, fechaYHoraActual: Date): void {
     this.#estadoActual = estadoEnCurso;
 
     // Crear nuevo cambio de estado.
-    const cambioEstado = new CambioEstadoLlamada(new Date(), estadoEnCurso);
+    const cambioEstado = new CambioEstadoLlamada(
+      fechaYHoraActual,
+      estadoEnCurso,
+    );
 
     // Agregar cambio de estado
     this.#cambioEstado.push(cambioEstado);
@@ -140,11 +144,14 @@ export class Llamada {
    *
    * @param estadoFinalizada
    */
-  finalizarLlamada(estadoFinalizada: Estado): void {
+  finalizarLlamada(estadoFinalizada: Estado, fechaYHoraActual: Date): void {
     this.#estadoActual = estadoFinalizada;
 
     // Crear nuevo cambio de estado.
-    const cambioEstado = new CambioEstadoLlamada(new Date(), estadoFinalizada);
+    const cambioEstado = new CambioEstadoLlamada(
+      fechaYHoraActual,
+      estadoFinalizada,
+    );
 
     // Agregar cambio de estado
     this.#cambioEstado.push(cambioEstado);

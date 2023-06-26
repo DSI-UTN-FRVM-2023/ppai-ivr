@@ -88,7 +88,12 @@ export class GestorRtaOperador {
   recibirLlamada(): void {
     this.#estadoEnCurso = this.buscarEstadoEnCurso();
 
-    this.#llamadaEnCurso.tomadaPorOperador(this.#estadoEnCurso);
+    this.#fechaHoraActual = this.getFechaYHoraActual();
+
+    this.#llamadaEnCurso.tomadaPorOperador(
+      this.#estadoEnCurso,
+      this.#fechaHoraActual,
+    );
   }
 
   /**
@@ -222,7 +227,10 @@ export class GestorRtaOperador {
 
     this.buscarEstadoFinalizado();
 
-    this.#llamadaEnCurso.finalizarLlamada(this.#estadoFinalizado);
+    this.#llamadaEnCurso.finalizarLlamada(
+      this.#estadoFinalizado,
+      this.#fechaHoraActual,
+    );
 
     this.finCU();
   }
