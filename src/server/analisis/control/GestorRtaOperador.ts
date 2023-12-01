@@ -5,13 +5,16 @@ import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { Llamada } from '../entity/Llamada';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 import { ListaValidacion } from '../../types/lista.validacion';
+import {
+  IColeccion,
+  IIterador,
+  IteradorAccion,
+} from '../pattern/IteratorPattern';
+import { Accion } from '../entity/Accion';
 
-export class GestorRtaOperador {
+export class GestorRtaOperador implements IColeccion<Accion> {
   /** Puntero hacia la instancia de la llamada en curso (proveniente del CU1) */
   #llamadaEnCurso: Llamada;
-
-  /** Puntero hacia la instancia del estado "En Curso". */
-  #estadoEnCurso: Estado;
 
   /** Nombre del cliente de la llamada en curso. */
   #nombreCliente: string;
@@ -49,9 +52,6 @@ export class GestorRtaOperador {
   /** La fecha y hora actual del sistema. */
   #fechaHoraActual: Date;
 
-  /** El puntero hacia la instancia de un estado "Finalizado". */
-  #estadoFinalizado: Estado;
-
   constructor(
     @Inject(DominioService)
     private readonly dominio: DominioService,
@@ -86,23 +86,7 @@ export class GestorRtaOperador {
    * Toma la llamada Iniciada de un cliente y la pasa a En Curso.
    */
   recibirLlamada(): void {
-    this.#estadoEnCurso = this.buscarEstadoEnCurso();
-
-    this.#fechaHoraActual = this.getFechaYHoraActual();
-
-    this.#llamadaEnCurso.tomadaPorOperador(
-      this.#estadoEnCurso,
-      this.#fechaHoraActual,
-    );
-  }
-
-  /**
-   * Busca entre todos los estados del dominio la instancia del estado "En Curso" y la devuelve.
-   */
-  buscarEstadoEnCurso(): Estado {
-    for (const estado of this.dominio.estados) {
-      if (estado.esEnCurso()) return estado;
-    }
+    this.#llamadaEnCurso.tomadaPorOperador(this.#fechaHoraActual);
   }
 
   /**
@@ -179,13 +163,33 @@ export class GestorRtaOperador {
     this.accionesRequeridas = this.buscarAccionesRequeridas();
   }
 
+  crearIterador(elementos: Accion[]): IIterador<Accion> {
+    const nuevo = new IteradorAccion(elementos);
+
+    return nuevo;
+  }
+
   /**
    * Busca todas las acciones posibles de efectuar en el dominio.
    *
    * @returns {string[]} Listado de acciones posibles.
    */
   buscarAccionesRequeridas(): string[] {
-    return this.dominio.acciones.map((accion) => accion.getDescripcion());
+    const nuevo = this.crearIterador(this.dominio.acciones);
+
+    nuevo.primero();
+
+    const accionesRequeridas: string[] = [];
+
+    while (!nuevo.haTerminado()) {
+      const actual = nuevo.actual();
+
+      accionesRequeridas.push(actual.getDescripcion());
+
+      nuevo.siguiente();
+    }
+
+    return accionesRequeridas;
   }
 
   /**
@@ -225,12 +229,7 @@ export class GestorRtaOperador {
   finalizarLlamada(): void {
     this.#fechaHoraActual = this.getFechaYHoraActual();
 
-    this.buscarEstadoFinalizado();
-
-    this.#llamadaEnCurso.finalizarLlamada(
-      this.#estadoFinalizado,
-      this.#fechaHoraActual,
-    );
+    this.#llamadaEnCurso.finalizarLlamada(this.#fechaHoraActual);
 
     this.finCU();
   }
@@ -244,15 +243,6 @@ export class GestorRtaOperador {
   }
 
   /**
-   * Busca entre todos los estados del dominio la instancia del estado "Finalizado" y la devuelve.
-   */
-  buscarEstadoFinalizado(): void {
-    this.#estadoFinalizado = this.dominio.estados.find((estado) =>
-      estado.esFinalizado(),
-    );
-  }
-
-  /**
    * Finaliza el caso de uso y muestra por consola los datos finales del gestor.
    */
   finCU(): void {
@@ -263,9 +253,6 @@ export class GestorRtaOperador {
     console.log(`Subopción: ${this.#subOpcionSeleccionada}`);
     console.log(`Descripcion del Operador: ${this.#respuestaOperador}`);
     console.log(`Fecha y hora: ${this.#fechaHoraActual}`);
-    console.log(
-      `Estados: (Finalizado) ${this.#estadoFinalizado.getNombre()} (En Curso) ${this.#estadoEnCurso.getNombre()}`,
-    );
     console.log(
       `Estados de la Llamada: ${this.#llamadaEnCurso
         .getCambioEstado()

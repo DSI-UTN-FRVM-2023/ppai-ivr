@@ -1,4 +1,9 @@
 import { ListaValidacion } from '../../types/lista.validacion';
+import {
+  IColeccion,
+  IIterador,
+  IteradorValidacion,
+} from '../pattern/IteratorPattern';
 import { SubOpcionLlamada } from './SubOpcionLlamada';
 import { Validacion } from './Validacion';
 
@@ -7,7 +12,7 @@ export enum NombresOpcionLlamada {
   ROBO_TARJETA_ANULAR = 'Informar robo y anular tarjeta',
 }
 
-export class OpcionLlamada {
+export class OpcionLlamada implements IColeccion<Validacion> {
   #nombre: string;
   #nroOrden: number;
 
@@ -54,11 +59,18 @@ export class OpcionLlamada {
     this.#validacionesRequeridas = validaciones;
   }
 
+  crearIterador(elementos: Validacion[]): IteradorValidacion {
+    // Crear iterador concreto.
+    const nuevo = new IteradorValidacion(elementos);
+
+    return nuevo;
+  }
+
   /**
    * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
    */
   getValidaciones(): ListaValidacion[] {
-    const listaValidacion = this.#validacionesRequeridas?.map<ListaValidacion>(
+    /* const listaValidacion = this.#validacionesRequeridas?.map<ListaValidacion>(
       (validacion) => {
         return {
           nombreValidacion: validacion.getMensajeValidacion(),
@@ -69,6 +81,34 @@ export class OpcionLlamada {
       },
     );
 
-    return listaValidacion;
+    return listaValidacion; */
+
+    // Crear iterador concreto.
+    const nuevo = this.crearIterador(this.#validacionesRequeridas);
+
+    // Posicionar en primer elemento.
+    nuevo.primero();
+
+    const resultado: ListaValidacion[] = [];
+
+    while (!nuevo.haTerminado()) {
+      // Obtener actual.
+      const actual = nuevo.actual();
+
+      // Obtener mensaje de validacion.
+      const mensaje = actual.getMensajeValidacion();
+
+      // Obtener opciones validaciones.
+      const opciones = actual.getOpcionesValidacion();
+
+      resultado.push({
+        nombreValidacion: mensaje,
+        opciones,
+      });
+
+      nuevo.siguiente();
+    }
+
+    return resultado;
   }
 }

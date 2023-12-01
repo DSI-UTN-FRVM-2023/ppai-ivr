@@ -1,6 +1,10 @@
+import {
+  IColeccion,
+  IteradorOpcionValidacion,
+} from '../pattern/IteratorPattern';
 import { OpcionValidacion } from './OpcionValidacion';
 
-export class Validacion {
+export class Validacion implements IColeccion<OpcionValidacion> {
   #mensajeValidacion: string;
 
   #opcionesValidacion: OpcionValidacion[];
@@ -25,7 +29,37 @@ export class Validacion {
     this.#opcionesValidacion = opcionesValidacion;
   }
 
-  getOpcionesValidacion(): OpcionValidacion[] {
-    return this.#opcionesValidacion;
+  crearIterador(elementos: OpcionValidacion[]): IteradorOpcionValidacion {
+    const nuevo = new IteradorOpcionValidacion(elementos);
+
+    return nuevo;
+  }
+
+  getOpcionesValidacion(): string[] {
+    // Crear iterador.
+    const nuevo = this.crearIterador(this.#opcionesValidacion);
+
+    // Declarar array de las descripciones de las opciones.
+    const opciones: string[] = [];
+
+    // Posicionar en el primer indice.
+    nuevo.primero();
+
+    // Comenzar iteración.
+    while (!nuevo.haTerminado()) {
+      // Obtener actual de la iteración.
+      const actual = nuevo.actual();
+
+      // Obtener descripcion del elemento.
+      const descripcion = actual.getDescripcion();
+
+      // Agregar descripción al array.
+      opciones.push(descripcion);
+
+      // Avanzar iteración.
+      nuevo.siguiente();
+    }
+
+    return opciones;
   }
 }

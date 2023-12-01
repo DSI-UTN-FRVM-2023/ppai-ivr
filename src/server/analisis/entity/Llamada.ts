@@ -1,5 +1,6 @@
 import { ListaValidacion } from '../../types/lista.validacion';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
+import { Iniciado } from '../pattern/StatePattern';
 import { Accion } from './Accion';
 import { CambioEstadoLlamada } from './CambioEstadoLlamada';
 import { Cliente } from './Cliente';
@@ -22,7 +23,7 @@ export class Llamada {
   constructor(cliente: Cliente) {
     this.#cliente = cliente;
 
-    const estadoInicial = new Estado(NombresEstado.INICIADA);
+    const estadoInicial = new Iniciado(new Date());
 
     this.#cambioEstado = [new CambioEstadoLlamada(new Date(), estadoInicial)];
     this.#estadoActual = estadoInicial;
@@ -103,20 +104,19 @@ export class Llamada {
   /**
    * Cambia el estado de una llamada Iniciada a En Curso al ser tomada por un operador.
    *
-   * @param {Estado} estadoEnCurso La instancia del estado "En Curso".
-   * @param {Date} fechaYHoraActual Fecha y hora actual.
+   * @param {Date} fechaHoraActual Fecha y hora actual.
    */
-  tomadaPorOperador(estadoEnCurso: Estado, fechaYHoraActual: Date): void {
-    this.#estadoActual = estadoEnCurso;
-
-    // Crear nuevo cambio de estado.
+  tomadaPorOperador(fechaHoraActual: Date): void {
+    /* // Crear nuevo cambio de estado.
     const cambioEstado = new CambioEstadoLlamada(
       fechaYHoraActual,
       estadoEnCurso,
     );
 
     // Agregar cambio de estado
-    this.#cambioEstado.push(cambioEstado);
+    this.#cambioEstado.push(cambioEstado); */
+
+    this.#estadoActual.tomadaPorOperador(this, fechaHoraActual);
   }
 
   /**
@@ -141,11 +141,9 @@ export class Llamada {
 
   /**
    * Finaliza la llamada si está "En Curso", calculando su duración en base a los cambios de estado.
-   *
-   * @param estadoFinalizada
    */
-  finalizarLlamada(estadoFinalizada: Estado, fechaYHoraActual: Date): void {
-    this.#estadoActual = estadoFinalizada;
+  finalizarLlamada(fechaYHoraActual: Date): void {
+    /* this.#estadoActual = estadoFinalizada;
 
     // Crear nuevo cambio de estado.
     const cambioEstado = new CambioEstadoLlamada(
@@ -157,6 +155,10 @@ export class Llamada {
     this.#cambioEstado.push(cambioEstado);
 
     // Calcular duracion.
+    this.calcularDuracion(); */
+
+    this.#estadoActual.finalizarLlamada(this, fechaYHoraActual);
+
     this.calcularDuracion();
   }
 
@@ -195,5 +197,16 @@ export class Llamada {
    */
   getValidacionesSubOpcionSeleccionada(): ListaValidacion[] {
     return this.#subOpcionSeleccionada?.getValidaciones();
+  }
+
+  /**
+   * Agrega un nuevo cambio de estado a la llamada.
+   *
+   * @param {CambioEstadoLlamada} cambioEstado Cambio de estado a agregar.
+   *
+   * @returns
+   */
+  agregarCambioEstado(cambioEstado: CambioEstadoLlamada): void {
+    this.#cambioEstado.push(cambioEstado);
   }
 }

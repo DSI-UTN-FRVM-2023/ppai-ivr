@@ -1,5 +1,5 @@
-import { CambioEstadoLlamada } from "./CambioEstadoLlamada";
-import { Llamada } from "./Llamada";
+import { CambioEstadoLlamada } from './CambioEstadoLlamada';
+import { Llamada } from './Llamada';
 
 export enum NombresEstado {
   INICIADA = 'Iniciada',
@@ -30,23 +30,26 @@ export abstract class Estado {
     return this.#nombre === NombresEstado.FINALIZADO;
   }
 
-  tomarPorOperador(): void {}
+  abstract tomadaPorOperador(object: Llamada, fechaHora: Date): void;
 
-  finalizarLlamada(this: Llamada, fechaHoraActual: Date): void {}
+  abstract finalizarLlamada(object: Llamada, fechaHora: Date): void;
 
-  finalizar(): void {}
+  abstract finalizar(): void;
 
-  cancelar(): void {}
+  abstract cancelar(): void;
 
-  descartarLlamada(): void {}
+  abstract descartarLlamada(): void;
 
-  marcarLlamadaParaRevisar(): void {}
+  abstract marcarLlamadaParaRevisar(): void;
 
-  marcarLlamadaParaEscuchar(): void {}
+  abstract marcarLlamadaParaEscuchar(): void;
 
-  confirmarLlamadaOk(): void {}
+  abstract confirmarLlamadaOk(): void;
 
-  public crearNuevoCambioEstado(e: Estado, fechaHoraInicio: Date): CambioEstadoLlamada {
+  public crearNuevoCambioEstado(
+    e: Estado,
+    fechaHoraInicio: Date,
+  ): CambioEstadoLlamada {
     return new CambioEstadoLlamada(fechaHoraInicio, e);
   }
 }

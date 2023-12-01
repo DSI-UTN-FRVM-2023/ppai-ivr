@@ -1,7 +1,12 @@
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
+import {
+  IColeccion,
+  IIterador,
+  IteradorInformacionCliente,
+} from '../pattern/IteratorPattern';
 import { InformacionCliente } from './InformacionCliente';
 
-export class Cliente {
+export class Cliente implements IColeccion<InformacionCliente> {
   #dni: string;
   #nombreCompleto: string;
   #nroCelular: string;
@@ -44,6 +49,14 @@ export class Cliente {
     return this.#nroCelular;
   }
 
+  crearIterador(
+    elementos: InformacionCliente[],
+  ): IIterador<InformacionCliente> {
+    const nuevo = new IteradorInformacionCliente(elementos);
+
+    return nuevo;
+  }
+
   /**
    * Valida las respuestas del cliente que el operador registró contra lo registrado por el cliente.
    *
@@ -52,16 +65,22 @@ export class Cliente {
   esInformacionCorrecta(
     listaDatos: ValidacionOpcionOperador[],
   ): ValidacionOpcionOperador[] {
-    // Por cada información del cliente registrada, validar los datos.
-    for (const validacion of listaDatos) {
-      for (const informacion of this.#info) {
-        // Es la validación que dice el dato tener?
-        if (informacion.esValidacion(validacion.nombreValidacion)) {
-          // Verificar el valor del dato de validación
-          validacion['correcta'] = informacion.esInformacionCorrecta(
-            validacion.datoValidacion,
-          );
+    const nuevo = this.crearIterador(this.#info);
+
+    nuevo.primero();
+
+    for (const datos of listaDatos) {
+      while (!nuevo.haTerminado()) {
+        nuevo.actual();
+
+        if (
+          nuevo.cumpleFiltros([datos.nombreValidacion, datos.datoValidacion])
+        ) {
+          datos['correcta'] = true;
+          continue;
         }
+
+        nuevo.siguiente();
       }
     }
 
