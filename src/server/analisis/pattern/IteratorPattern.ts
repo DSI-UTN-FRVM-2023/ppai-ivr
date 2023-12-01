@@ -1,5 +1,6 @@
 import { Accion } from '../entity/Accion';
 import { InformacionCliente } from '../entity/InformacionCliente';
+import { OpcionValidacion } from '../entity/OpcionValidacion';
 import { Validacion } from '../entity/Validacion';
 
 export interface IIterador<T> {
@@ -102,6 +103,27 @@ export class IteradorInformacionCliente
   private posicion: number;
 
   actual(): InformacionCliente {
+    return this.elementos[this.posicion];
+  }
+  primero(): void {
+    this.posicion = 0;
+  }
+  siguiente(): void {
+    if (this.posicion < this.elementos.length - 1) this.posicion += 1;
+  }
+  haTerminado(): boolean {
+    return this.posicion >= this.elementos.length;
+  }
+  cumpleFiltros(filtros: any[]): boolean {
+    throw new Error('Method not implemented.');
+  }
+}
+
+export class IteradorOpcionValidacion implements IIterador<OpcionValidacion> {
+  private elementos: OpcionValidacion[];
+  private posicion: number;
+
+  actual(): OpcionValidacion {
     return this.elementos[this.posicion];
   }
   primero(): void {
