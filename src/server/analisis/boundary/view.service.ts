@@ -5,25 +5,25 @@ import { NextServer } from 'next/dist/server/next';
 const Next = require('next');
 
 export class ViewService implements OnModuleInit {
-  readonly #logger = new Logger(ViewService.name);
+  readonly logger = new Logger(ViewService.name);
 
-  #server: NextServer;
+  private server: NextServer;
 
   async onModuleInit(): Promise<void> {
     try {
-      this.#server = Next({
+      this.server = Next({
         dev: process.env.NODE_ENV !== 'production',
         dir: './src/client',
       });
 
-      await this.#server.prepare();
+      await this.server.prepare();
     } catch (e) {
-      this.#logger.error(`Fallo crítico al iniciar Next.js: ${e}`);
+      this.logger.error(`Fallo crítico al iniciar Next.js: ${e}`);
       throw e;
     }
   }
 
   getServer(): NextServer {
-    return this.#server;
+    return this.server;
   }
 }

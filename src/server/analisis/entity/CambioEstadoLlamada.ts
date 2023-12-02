@@ -1,28 +1,28 @@
 import { Estado } from './Estado';
 
 export class CambioEstadoLlamada {
-  #fechaHoraInicio: Date;
+  private fechaHoraInicio: Date;
 
-  #estado: Estado;
+  private estado: Estado;
 
   constructor(fechaHoraInicio: Date, estado: Estado) {
-    this.#fechaHoraInicio = fechaHoraInicio;
-    this.#estado = estado;
+    this.fechaHoraInicio = fechaHoraInicio;
+    this.estado = estado;
   }
 
   setFechaHoraInicio(fechaHoraInicio: Date): void {
-    this.#fechaHoraInicio = fechaHoraInicio;
+    this.fechaHoraInicio = fechaHoraInicio;
   }
 
   getFechaHoraInicio(): Date {
-    return this.#fechaHoraInicio;
+    return this.fechaHoraInicio;
   }
 
   setEstado(estado: Estado): void {
-    this.#estado = estado;
+    this.estado = estado;
   }
 
   getEstado(): Estado {
-    return this.#estado;
+    return this.estado;
   }
 }

@@ -7,11 +7,11 @@ import {
 import { InformacionCliente } from './InformacionCliente';
 
 export class Cliente implements IColeccion<InformacionCliente> {
-  #dni: string;
-  #nombreCompleto: string;
-  #nroCelular: string;
+  private dni: string;
+  private nombreCompleto: string;
+  private nroCelular: string;
 
-  #info: InformacionCliente[];
+  private info: InformacionCliente[];
 
   constructor(
     dni: string,
@@ -19,34 +19,34 @@ export class Cliente implements IColeccion<InformacionCliente> {
     nroCelular: string,
     info?: InformacionCliente[],
   ) {
-    this.#dni = dni;
-    this.#nombreCompleto = nombreCompleto;
-    this.#nroCelular = nroCelular;
-    this.#info = info || [];
+    this.dni = dni;
+    this.nombreCompleto = nombreCompleto;
+    this.nroCelular = nroCelular;
+    this.info = info || [];
   }
 
   setDni(dni: string): void {
-    this.#dni = dni;
+    this.dni = dni;
   }
 
   getDni(): string {
-    return this.#dni;
+    return this.dni;
   }
 
   setNombreCompleto(nombreCompleto: string): void {
-    this.#nombreCompleto = nombreCompleto;
+    this.nombreCompleto = nombreCompleto;
   }
 
   getNombreCompleto(): string {
-    return this.#nombreCompleto;
+    return this.nombreCompleto;
   }
 
   setNroCelular(nroCelular: string): void {
-    this.#nroCelular = nroCelular;
+    this.nroCelular = nroCelular;
   }
 
   getNroCelular(): string {
-    return this.#nroCelular;
+    return this.nroCelular;
   }
 
   crearIterador(
@@ -65,20 +65,22 @@ export class Cliente implements IColeccion<InformacionCliente> {
   esInformacionCorrecta(
     listaDatos: ValidacionOpcionOperador[],
   ): ValidacionOpcionOperador[] {
-    const nuevo = this.crearIterador(this.#info);
-
-    nuevo.primero();
-
     for (const datos of listaDatos) {
+      const nuevo = this.crearIterador(this.info);
+
+      nuevo.primero();
+
       while (!nuevo.haTerminado()) {
         nuevo.actual();
 
-        if (
-          nuevo.cumpleFiltros([datos.nombreValidacion, datos.datoValidacion])
-        ) {
-          datos['correcta'] = true;
-          continue;
-        }
+        const esCorrecta = nuevo.cumpleFiltros([
+          datos.nombreValidacion,
+          datos.datoValidacion,
+        ]);
+
+        datos['correcta'] = esCorrecta;
+
+        if (esCorrecta) break;
 
         nuevo.siguiente();
       }
@@ -88,10 +90,10 @@ export class Cliente implements IColeccion<InformacionCliente> {
   }
 
   getInformacion(): InformacionCliente[] {
-    return this.#info;
+    return this.info;
   }
 
   setInformacion(info: InformacionCliente[]): void {
-    this.#info = info;
+    this.info = info;
   }
 }

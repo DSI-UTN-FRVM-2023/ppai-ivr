@@ -5,29 +5,29 @@ export enum NombresCategoria {
 }
 
 export class CategoriaLlamada {
-  #nombre: string;
+  private nombre: string;
 
-  #opcion: OpcionLlamada[];
+  private opcion: OpcionLlamada[];
 
   constructor(nombre: string, opciones: OpcionLlamada[]) {
-    this.#nombre = nombre;
-    this.#opcion = opciones;
+    this.nombre = nombre;
+    this.opcion = opciones;
   }
 
   setNombre(nombre: string): void {
-    this.#nombre = nombre;
+    this.nombre = nombre;
   }
 
   getNombre(): string {
-    return this.#nombre;
+    return this.nombre;
   }
 
   setOpcion(opcion: OpcionLlamada[]): void {
-    this.#opcion = opcion;
+    this.opcion = opcion;
   }
 
   getOpcion(): OpcionLlamada[] {
-    return this.#opcion;
+    return this.opcion;
   }
 
   getCategoriaOpcionSubOpcion(): void {

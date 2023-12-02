@@ -6,25 +6,25 @@ import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
 
 @Controller('/')
 export class PantallaRtaOperador {
-  #nombreCliente: string;
+  private nombreCliente: string;
 
-  #categoriaSeleccionada: string;
+  private categoriaSeleccionada: string;
 
-  #opcionSeleccionada: string;
+  private opcionSeleccionada: string;
 
-  #nombreValidacionesOpcion: string[];
-  #radioBtnValidacionesOpcion: string[];
+  private nombreValidacionesOpcion: string[];
+  private radioBtnValidacionesOpcion: string[];
 
-  #subOpcionSeleccionada: string;
+  private subOpcionSeleccionada: string;
 
-  #nombreValidacionesSubOpcion: string[];
-  #radioBtnValidacionesSubOpcion: string[];
+  private nombreValidacionesSubOpcion: string[];
+  private radioBtnValidacionesSubOpcion: string[];
 
-  #respuestaOperador: string;
+  private respuestaOperador: string;
 
-  #accionARealizar: string;
+  private accionARealizar: string;
 
-  #botonConfirmacion: string;
+  private botonConfirmacion: string;
 
   constructor(
     private readonly view: ViewService,

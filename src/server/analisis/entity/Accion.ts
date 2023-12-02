@@ -5,17 +5,17 @@ export enum DescripcionesAccion {
 }
 
 export class Accion {
-  #descripcion: string;
+  private descripcion: string;
 
   constructor(descripcion: string) {
-    this.#descripcion = descripcion;
+    this.descripcion = descripcion;
   }
 
   getDescripcion(): string {
-    return this.#descripcion;
+    return this.descripcion;
   }
 
   setDescripcion(descripcion: string): void {
-    this.#descripcion = descripcion;
+    this.descripcion = descripcion;
   }
 }

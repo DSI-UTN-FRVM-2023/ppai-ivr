@@ -5,28 +5,28 @@ import {
 import { OpcionValidacion } from './OpcionValidacion';
 
 export class Validacion implements IColeccion<OpcionValidacion> {
-  #mensajeValidacion: string;
+  private mensajeValidacion: string;
 
-  #opcionesValidacion: OpcionValidacion[];
+  private opcionesValidacion: OpcionValidacion[];
 
   constructor(
     mensajeValidacion: string,
     opcionesValidacion: OpcionValidacion[],
   ) {
-    this.#mensajeValidacion = mensajeValidacion;
-    this.#opcionesValidacion = opcionesValidacion;
+    this.mensajeValidacion = mensajeValidacion;
+    this.opcionesValidacion = opcionesValidacion;
   }
 
   setMensajeValidacion(mensajeValidacion: string): void {
-    this.#mensajeValidacion = mensajeValidacion;
+    this.mensajeValidacion = mensajeValidacion;
   }
 
   getMensajeValidacion(): string {
-    return this.#mensajeValidacion;
+    return this.mensajeValidacion;
   }
 
   setOpcionesValidacion(opcionesValidacion: OpcionValidacion[]): void {
-    this.#opcionesValidacion = opcionesValidacion;
+    this.opcionesValidacion = opcionesValidacion;
   }
 
   crearIterador(elementos: OpcionValidacion[]): IteradorOpcionValidacion {
@@ -37,7 +37,7 @@ export class Validacion implements IColeccion<OpcionValidacion> {
 
   getOpcionesValidacion(): string[] {
     // Crear iterador.
-    const nuevo = this.crearIterador(this.#opcionesValidacion);
+    const nuevo = this.crearIterador(this.opcionesValidacion);
 
     // Declarar array de las descripciones de las opciones.
     const opciones: string[] = [];

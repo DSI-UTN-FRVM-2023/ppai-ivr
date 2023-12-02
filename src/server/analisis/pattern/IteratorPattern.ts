@@ -72,11 +72,13 @@ export class IteradorValidacion implements IIterador<Validacion> {
   }
 
   siguiente(): void {
-    if (this.posicion < this.elementos.length - 1) this.posicion += 1;
+    if (this.posicion < this.elementos?.length) this.posicion += 1;
   }
 
   haTerminado(): boolean {
-    return this.posicion >= this.elementos.length;
+    return this.elementos?.length
+      ? this.posicion >= this.elementos.length
+      : true;
   }
 
   cumpleFiltros(filtros: any[]): boolean {
@@ -102,11 +104,13 @@ export class IteradorAccion implements IIterador<Accion> {
   }
 
   siguiente(): void {
-    if (this.posicion < this.elementos.length - 1) this.posicion += 1;
+    if (this.posicion < this.elementos?.length) this.posicion += 1;
   }
 
   haTerminado(): boolean {
-    return this.posicion >= this.elementos.length;
+    return this.elementos?.length
+      ? this.posicion >= this.elementos.length
+      : true;
   }
 
   cumpleFiltros(filtros: any[]): boolean {
@@ -136,11 +140,13 @@ export class IteradorInformacionCliente
   }
 
   siguiente(): void {
-    if (this.posicion < this.elementos.length - 1) this.posicion += 1;
+    if (this.posicion < this.elementos?.length) this.posicion += 1;
   }
 
   haTerminado(): boolean {
-    return this.posicion >= this.elementos.length;
+    return this.elementos?.length
+      ? this.posicion >= this.elementos.length
+      : true;
   }
 
   cumpleFiltros(filtros: any[]): boolean {
@@ -173,11 +179,13 @@ export class IteradorOpcionValidacion implements IIterador<OpcionValidacion> {
   }
 
   siguiente(): void {
-    if (this.posicion < this.elementos.length - 1) this.posicion += 1;
+    if (this.posicion < this.elementos.length) this.posicion += 1;
   }
 
   haTerminado(): boolean {
-    return this.posicion >= this.elementos.length;
+    return this.elementos?.length
+      ? this.posicion >= this.elementos.length
+      : true;
   }
 
   cumpleFiltros(filtros: any[]): boolean {

@@ -13,11 +13,11 @@ export enum NombresOpcionLlamada {
 }
 
 export class OpcionLlamada implements IColeccion<Validacion> {
-  #nombre: string;
-  #nroOrden: number;
+  private nombre: string;
+  private nroOrden: number;
 
-  #subOpcionLlamada: SubOpcionLlamada[];
-  #validacionesRequeridas?: Validacion[];
+  private subOpcionLlamada: SubOpcionLlamada[];
+  private validacionesRequeridas?: Validacion[];
 
   constructor(
     nombre: string,
@@ -25,38 +25,38 @@ export class OpcionLlamada implements IColeccion<Validacion> {
     subOpcionLlamada: SubOpcionLlamada[],
     validacionesRequeridas?: Validacion[],
   ) {
-    this.#nombre = nombre;
-    this.#nroOrden = nroOrden;
-    this.#subOpcionLlamada = subOpcionLlamada;
-    this.#validacionesRequeridas = validacionesRequeridas;
+    this.nombre = nombre;
+    this.nroOrden = nroOrden;
+    this.subOpcionLlamada = subOpcionLlamada;
+    this.validacionesRequeridas = validacionesRequeridas;
   }
 
   setNombre(nombre: string): void {
-    this.#nombre = nombre;
+    this.nombre = nombre;
   }
 
   getNombre(): string {
-    return this.#nombre;
+    return this.nombre;
   }
 
   setNroOrden(nroOrden: number): void {
-    this.#nroOrden = nroOrden;
+    this.nroOrden = nroOrden;
   }
 
   getNroOrden(): number {
-    return this.#nroOrden;
+    return this.nroOrden;
   }
 
   setSubOpcionLlamada(subOpcionLlamada: SubOpcionLlamada[]): void {
-    this.#subOpcionLlamada = subOpcionLlamada;
+    this.subOpcionLlamada = subOpcionLlamada;
   }
 
   getSubOpcionLlamada(): SubOpcionLlamada[] {
-    return this.#subOpcionLlamada;
+    return this.subOpcionLlamada;
   }
 
   setValidaciones(validaciones: Validacion[]): void {
-    this.#validacionesRequeridas = validaciones;
+    this.validacionesRequeridas = validaciones;
   }
 
   crearIterador(elementos: Validacion[]): IteradorValidacion {
@@ -70,7 +70,7 @@ export class OpcionLlamada implements IColeccion<Validacion> {
    * Devuelve los mensajes de las validaciones pertenecientes a esta opcion.
    */
   getValidaciones(): ListaValidacion[] {
-    /* const listaValidacion = this.#validacionesRequeridas?.map<ListaValidacion>(
+    /* const listaValidacion = this.validacionesRequeridas?.map<ListaValidacion>(
       (validacion) => {
         return {
           nombreValidacion: validacion.getMensajeValidacion(),
@@ -84,7 +84,8 @@ export class OpcionLlamada implements IColeccion<Validacion> {
     return listaValidacion; */
 
     // Crear iterador concreto.
-    const nuevo = this.crearIterador(this.#validacionesRequeridas);
+    const a = this.validacionesRequeridas;
+    const nuevo = this.crearIterador(this.validacionesRequeridas);
 
     // Posicionar en primer elemento.
     nuevo.primero();

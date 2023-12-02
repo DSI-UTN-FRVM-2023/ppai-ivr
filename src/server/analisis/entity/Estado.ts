@@ -4,30 +4,30 @@ import { Llamada } from './Llamada';
 export enum NombresEstado {
   INICIADA = 'Iniciada',
   EN_CURSO = 'En Curso',
-  FINALIZADO = 'Finalizado',
+  FINALIZADO = 'Finalizada',
 }
 
 export abstract class Estado {
-  #nombre: string;
+  private nombre: string;
 
   constructor(nombre: string) {
-    this.#nombre = nombre;
+    this.nombre = nombre;
   }
 
   setNombre(nombre: string): void {
-    this.#nombre = nombre;
+    this.nombre = nombre;
   }
 
   getNombre(): string {
-    return this.#nombre;
+    return this.nombre;
   }
 
   esEnCurso(): boolean {
-    return this.#nombre === NombresEstado.EN_CURSO;
+    return this.nombre === NombresEstado.EN_CURSO;
   }
 
   esFinalizado(): boolean {
-    return this.#nombre === NombresEstado.FINALIZADO;
+    return this.nombre === NombresEstado.FINALIZADO;
   }
 
   abstract tomadaPorOperador(object: Llamada, fechaHora: Date): void;

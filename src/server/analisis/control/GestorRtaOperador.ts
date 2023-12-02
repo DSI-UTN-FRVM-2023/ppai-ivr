@@ -1,6 +1,5 @@
 import { DominioService } from '../../dominio.service';
 import { CategoriaLlamada } from '../entity/CategoriaLlamada';
-import { Estado } from '../entity/Estado';
 import { Inject, InternalServerErrorException } from '@nestjs/common';
 import { Llamada } from '../entity/Llamada';
 import { ValidacionOpcionOperador } from '../../types/validacion.opcion';
@@ -14,56 +13,67 @@ import { Accion } from '../entity/Accion';
 
 export class GestorRtaOperador implements IColeccion<Accion> {
   /** Puntero hacia la instancia de la llamada en curso (proveniente del CU1) */
-  #llamadaEnCurso: Llamada;
+  private llamadaEnCurso: Llamada;
 
   /** Nombre del cliente de la llamada en curso. */
-  #nombreCliente: string;
+  private nombreCliente: string;
 
   /** Validaciones a realizar sobre la llamada del cliente (opcion seleccionada) */
-  #listaValidacionesOpcion: ListaValidacion[];
+  private listaValidacionesOpcion: ListaValidacion[];
 
   /** Validaciones a realizar sobre la llamada del cliente (subopcion seleccionada) */
-  #listaValidacionesSubOpcion: ListaValidacion[];
+  private listaValidacionesSubOpcion: ListaValidacion[];
 
   /** La categoria de la llamada según lo que seleccionó el cliente. */
-  #categoriaLlamada: CategoriaLlamada;
+  private categoriaLlamada: CategoriaLlamada;
 
   /** Nombre de la categoria de la llamada */
-  #nombreCategoriaLlamada: string;
+  private nombreCategoriaLlamada: string;
 
   /** Nombre de la opcion seleccionada. */
-  #opcionSeleccionada: string;
+  private opcionSeleccionada: string;
 
   /** Nombre de la subopcion seleccionada. */
-  #subOpcionSeleccionada: string;
+  private subOpcionSeleccionada: string;
 
   /** Listado con todas las opciones de validacion que el operador ingresa */
-  #listaIngresoDatosParaValidar: ValidacionOpcionOperador[] = [];
+  private listaIngresoDatosParaValidar: ValidacionOpcionOperador[] = [];
 
   /** La respuesta del operador a la llamada. */
-  #respuestaOperador: string;
+  private respuestaOperador: string;
 
   /** Listado de todas las acciones disponibles para selección. */
   accionesRequeridas: string[];
 
   /** La selección del operador ante la acción a realizar. */
-  #seleccionAccionARealizar: string;
+  private seleccionAccionARealizar: string;
 
   /** La fecha y hora actual del sistema. */
-  #fechaHoraActual: Date;
+  private fechaHoraActual: Date;
 
   constructor(
     @Inject(DominioService)
     private readonly dominio: DominioService,
   ) {
-    this.#llamadaEnCurso = this.dominio.llamadaEnCurso;
-    this.#categoriaLlamada = this.dominio.categoriaLlamadaEnCurso;
+    this.llamadaEnCurso = this.dominio.llamadaEnCurso;
+    this.categoriaLlamada = this.dominio.categoriaLlamadaEnCurso;
+    this.fechaHoraActual = this.getFechaYHoraActual();
   }
 
   /**
    * Comienza el proceso de una nueva respuesta de operador ante una llamada de un cliente Iniciada que requiere atención del operador.
    */
   nuevaRespuestaOperador(): any {
+    if (this.llamadaEnCurso.getEstadoActual().getNombre() !== 'Iniciado')
+      return {
+        nombreCliente: this.nombreCliente,
+        nombreCategoriaLlamada: this.nombreCategoriaLlamada,
+        opcionSeleccionada: this.opcionSeleccionada,
+        subOpcionSeleccionada: this.subOpcionSeleccionada,
+        listaValidacionesOpcion: this.listaValidacionesOpcion,
+        listaValidacionesSubOpcion: this.listaValidacionesSubOpcion,
+      };
+
     this.recibirLlamada();
 
     this.buscarDatosLlamada();
@@ -73,12 +83,12 @@ export class GestorRtaOperador implements IColeccion<Accion> {
     // Por cuestiones de implementación en web, le pasamos toda la información desde este método.
     // Este método actua entonces como el mostrarDatosLlamadaYValidacionesRequeridas()
     return {
-      nombreCliente: this.#nombreCliente,
-      nombreCategoriaLlamada: this.#nombreCategoriaLlamada,
-      opcionSeleccionada: this.#opcionSeleccionada,
-      subOpcionSeleccionada: this.#subOpcionSeleccionada,
-      listaValidacionesOpcion: this.#listaValidacionesOpcion,
-      listaValidacionesSubOpcion: this.#listaValidacionesSubOpcion,
+      nombreCliente: this.nombreCliente,
+      nombreCategoriaLlamada: this.nombreCategoriaLlamada,
+      opcionSeleccionada: this.opcionSeleccionada,
+      subOpcionSeleccionada: this.subOpcionSeleccionada,
+      listaValidacionesOpcion: this.listaValidacionesOpcion,
+      listaValidacionesSubOpcion: this.listaValidacionesSubOpcion,
     };
   }
 
@@ -86,7 +96,7 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * Toma la llamada Iniciada de un cliente y la pasa a En Curso.
    */
   recibirLlamada(): void {
-    this.#llamadaEnCurso.tomadaPorOperador(this.#fechaHoraActual);
+    this.llamadaEnCurso.tomadaPorOperador(this.fechaHoraActual);
   }
 
   /**
@@ -94,18 +104,18 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    */
   buscarDatosLlamada(): void {
     // Buscar datos del cliente.
-    this.#nombreCliente = this.#llamadaEnCurso.getNombreCliente();
+    this.nombreCliente = this.llamadaEnCurso.getNombreCliente();
 
     // Buscar datos de la categoria
-    this.#opcionSeleccionada = this.#llamadaEnCurso
+    this.opcionSeleccionada = this.llamadaEnCurso
       .getOpcionSeleccionada()
       .getNombre();
 
-    this.#subOpcionSeleccionada = this.#llamadaEnCurso
+    this.subOpcionSeleccionada = this.llamadaEnCurso
       .getSubOpcionSeleccionada()
       .getNombre();
 
-    this.#nombreCategoriaLlamada = this.#categoriaLlamada.getNombre();
+    this.nombreCategoriaLlamada = this.categoriaLlamada.getNombre();
   }
 
   /**
@@ -117,13 +127,13 @@ export class GestorRtaOperador implements IColeccion<Accion> {
     datoValidacion: ValidacionOpcionOperador,
   ): ValidacionOpcionOperador[] {
     // Buscar si este dato ya fue ingresado.
-    const dato = this.#listaIngresoDatosParaValidar?.find(
+    const dato = this.listaIngresoDatosParaValidar?.find(
       (dato) => dato.nombreValidacion === datoValidacion.nombreValidacion,
     );
 
     // Modificarlo, y si no agregarlo.
     if (dato) dato.datoValidacion = datoValidacion.datoValidacion;
-    else this.#listaIngresoDatosParaValidar.push(datoValidacion);
+    else this.listaIngresoDatosParaValidar.push(datoValidacion);
 
     // Validar el dato con la información del cliente.
     return this.validarInformacionCliente();
@@ -133,23 +143,23 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * Busca las validaciones requeridas para la opcion y subopcion seleccionada por el cliente.
    */
   buscarValidaciones(): void {
-    this.#listaValidacionesOpcion =
-      this.#llamadaEnCurso.getValidacionesOpcionSeleccionada();
+    this.listaValidacionesOpcion =
+      this.llamadaEnCurso.getValidacionesOpcionSeleccionada();
 
-    this.#listaValidacionesSubOpcion =
-      this.#llamadaEnCurso.getValidacionesSubOpcionSeleccionada();
+    this.listaValidacionesSubOpcion =
+      this.llamadaEnCurso.getValidacionesSubOpcionSeleccionada();
   }
 
   /**
    * Valida la información del cliente con los datos ingresados por el operador.
    */
   validarInformacionCliente(): ValidacionOpcionOperador[] {
-    this.#listaIngresoDatosParaValidar =
-      this.#llamadaEnCurso.verificarInformacionCorrectaCliente(
-        this.#listaIngresoDatosParaValidar,
+    this.listaIngresoDatosParaValidar =
+      this.llamadaEnCurso.verificarInformacionCorrectaCliente(
+        this.listaIngresoDatosParaValidar,
       );
 
-    return this.#listaIngresoDatosParaValidar;
+    return this.listaIngresoDatosParaValidar;
   }
 
   /**
@@ -158,7 +168,7 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * @param {string} respuestaOperador La respuesta del operador.
    */
   tomarIngresoRespuesta(respuestaOperador: string): void {
-    this.#respuestaOperador = respuestaOperador;
+    this.respuestaOperador = respuestaOperador;
 
     this.accionesRequeridas = this.buscarAccionesRequeridas();
   }
@@ -197,7 +207,7 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * @param accionSeleccionada
    */
   tomarSeleccionAccion(accionSeleccionada: string): void {
-    this.#seleccionAccionARealizar = accionSeleccionada;
+    this.seleccionAccionARealizar = accionSeleccionada;
   }
 
   /**
@@ -209,14 +219,10 @@ export class GestorRtaOperador implements IColeccion<Accion> {
 
     if (random > 500)
       throw new InternalServerErrorException(
-        `La acción "${
-          this.#seleccionAccionARealizar
-        }" no se pudo ejecutar. Intente de nuevo.`,
+        `La acción "${this.seleccionAccionARealizar}" no se pudo ejecutar. Intente de nuevo.`,
       );
 
-    const mensajeCu28 = `La acción "${
-      this.#seleccionAccionARealizar
-    }" se ejecutó exitosamente.`;
+    const mensajeCu28 = `La acción "${this.seleccionAccionARealizar}" se ejecutó exitosamente.`;
 
     this.finalizarLlamada();
 
@@ -227,9 +233,9 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * Obtiene la fecha y hora actual, cambia la llamada en curso a finalizada y finaliza el caso de uso.
    */
   finalizarLlamada(): void {
-    this.#fechaHoraActual = this.getFechaYHoraActual();
+    this.fechaHoraActual = this.getFechaYHoraActual();
 
-    this.#llamadaEnCurso.finalizarLlamada(this.#fechaHoraActual);
+    this.llamadaEnCurso.finalizarLlamada(this.fechaHoraActual);
 
     this.finCU();
   }
@@ -247,20 +253,20 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    */
   finCU(): void {
     console.log(`Respuesta del operador registrada.`);
-    console.log(`Cliente: ${this.#nombreCliente}`);
-    console.log(`Categoría: ${this.#nombreCategoriaLlamada}`);
-    console.log(`Opción: ${this.#opcionSeleccionada}`);
-    console.log(`Subopción: ${this.#subOpcionSeleccionada}`);
-    console.log(`Descripcion del Operador: ${this.#respuestaOperador}`);
-    console.log(`Fecha y hora: ${this.#fechaHoraActual}`);
+    console.log(`Cliente: ${this.nombreCliente}`);
+    console.log(`Categoría: ${this.nombreCategoriaLlamada}`);
+    console.log(`Opción: ${this.opcionSeleccionada}`);
+    console.log(`Subopción: ${this.subOpcionSeleccionada}`);
+    console.log(`Descripcion del Operador: ${this.respuestaOperador}`);
+    console.log(`Fecha y hora: ${this.fechaHoraActual}`);
     console.log(
-      `Estados de la Llamada: ${this.#llamadaEnCurso
+      `Estados de la Llamada: ${this.llamadaEnCurso
         .getCambioEstado()
         .map((cambioEstado) => cambioEstado.getEstado().getNombre())
         .join(', ')}`,
     );
     console.log(
-      `Duración Llamada: ${this.#llamadaEnCurso.getDuracion()} segundos`,
+      `Duración Llamada: ${this.llamadaEnCurso.getDuracion()} segundos`,
     );
   }
 }

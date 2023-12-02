@@ -9,96 +9,96 @@ import { OpcionLlamada } from './OpcionLlamada';
 import { SubOpcionLlamada } from './SubOpcionLlamada';
 
 export class Llamada {
-  #descripcionOperador?: string;
-  #detalleAccionRequerida?: string;
-  #duracion?: number;
+  private descripcionOperador?: string;
+  private detalleAccionRequerida?: string;
+  private duracion?: number;
 
-  #cliente: Cliente;
-  #opcionSeleccionada?: OpcionLlamada;
-  #subOpcionSeleccionada?: SubOpcionLlamada;
-  #cambioEstado: CambioEstadoLlamada[];
-  #estadoActual: Estado;
-  #accionRequerida?: Accion;
+  private cliente: Cliente;
+  private opcionSeleccionada?: OpcionLlamada;
+  private subOpcionSeleccionada?: SubOpcionLlamada;
+  private cambioEstado: CambioEstadoLlamada[];
+  private estadoActual: Estado;
+  private accionRequerida?: Accion;
 
   constructor(cliente: Cliente) {
-    this.#cliente = cliente;
+    this.cliente = cliente;
 
     const estadoInicial = new Iniciado(new Date());
 
-    this.#cambioEstado = [new CambioEstadoLlamada(new Date(), estadoInicial)];
-    this.#estadoActual = estadoInicial;
+    this.cambioEstado = [new CambioEstadoLlamada(new Date(), estadoInicial)];
+    this.estadoActual = estadoInicial;
   }
 
   setDescripcionOperador(descripcionOperador: string): void {
-    this.#descripcionOperador = descripcionOperador;
+    this.descripcionOperador = descripcionOperador;
   }
 
   getDescripcionOperador(): string {
-    return this.#descripcionOperador;
+    return this.descripcionOperador;
   }
 
   setDetalleAccionRequerida(detalleAccionRequerida): void {
-    this.#detalleAccionRequerida = detalleAccionRequerida;
+    this.detalleAccionRequerida = detalleAccionRequerida;
   }
 
   getDetalleAccionRequerida(): string {
-    return this.#detalleAccionRequerida;
+    return this.detalleAccionRequerida;
   }
 
   setDuracion(duracion: number): void {
-    this.#duracion = duracion;
+    this.duracion = duracion;
   }
 
   getDuracion(): number {
-    return this.#duracion;
+    return this.duracion;
   }
 
   setOpcionSeleccionada(opcionSeleccionada?: OpcionLlamada): void {
-    this.#opcionSeleccionada = opcionSeleccionada;
+    this.opcionSeleccionada = opcionSeleccionada;
   }
 
   getOpcionSeleccionada(): OpcionLlamada | undefined {
-    return this.#opcionSeleccionada;
+    return this.opcionSeleccionada;
   }
 
   setSubOpcionSeleccionada(subOpcionSeleccionada?: SubOpcionLlamada): void {
-    this.#subOpcionSeleccionada = subOpcionSeleccionada;
+    this.subOpcionSeleccionada = subOpcionSeleccionada;
   }
 
   getSubOpcionSeleccionada(): SubOpcionLlamada | undefined {
-    return this.#subOpcionSeleccionada;
+    return this.subOpcionSeleccionada;
   }
 
   setCliente(cliente: Cliente): void {
-    this.#cliente = cliente;
+    this.cliente = cliente;
   }
 
   getCliente(): Cliente {
-    return this.#cliente;
+    return this.cliente;
   }
 
   setCambioEstado(cambioEstado: CambioEstadoLlamada[]): void {
-    this.#cambioEstado = cambioEstado;
+    this.cambioEstado = cambioEstado;
   }
 
   getCambioEstado(): CambioEstadoLlamada[] {
-    return this.#cambioEstado;
+    return this.cambioEstado;
   }
 
   setEstadoActual(estadoActual: Estado): void {
-    this.#estadoActual = estadoActual;
+    this.estadoActual = estadoActual;
   }
 
   getEstadoActual(): Estado {
-    return this.#estadoActual;
+    return this.estadoActual;
   }
 
   setAccionRequerida(accionRequerida?: Accion): void {
-    this.#accionRequerida = accionRequerida;
+    this.accionRequerida = accionRequerida;
   }
 
   getAccionRequerida(): Accion | undefined {
-    return this.#accionRequerida;
+    return this.accionRequerida;
   }
 
   /**
@@ -114,9 +114,9 @@ export class Llamada {
     );
 
     // Agregar cambio de estado
-    this.#cambioEstado.push(cambioEstado); */
+    this.cambioEstado.push(cambioEstado); */
 
-    this.#estadoActual.tomadaPorOperador(this, fechaHoraActual);
+    this.estadoActual.tomadaPorOperador(this, fechaHoraActual);
   }
 
   /**
@@ -125,7 +125,7 @@ export class Llamada {
    * @returns {string} Nombre del cliente.
    */
   getNombreCliente(): string {
-    return this.#cliente.getNombreCompleto();
+    return this.cliente.getNombreCompleto();
   }
 
   /**
@@ -136,14 +136,14 @@ export class Llamada {
   verificarInformacionCorrectaCliente(
     listaDatos: ValidacionOpcionOperador[],
   ): ValidacionOpcionOperador[] {
-    return this.#cliente.esInformacionCorrecta(listaDatos);
+    return this.cliente.esInformacionCorrecta(listaDatos);
   }
 
   /**
    * Finaliza la llamada si está "En Curso", calculando su duración en base a los cambios de estado.
    */
   finalizarLlamada(fechaYHoraActual: Date): void {
-    /* this.#estadoActual = estadoFinalizada;
+    /* this.estadoActual = estadoFinalizada;
 
     // Crear nuevo cambio de estado.
     const cambioEstado = new CambioEstadoLlamada(
@@ -152,12 +152,12 @@ export class Llamada {
     );
 
     // Agregar cambio de estado
-    this.#cambioEstado.push(cambioEstado);
+    this.cambioEstado.push(cambioEstado);
 
     // Calcular duracion.
     this.calcularDuracion(); */
 
-    this.#estadoActual.finalizarLlamada(this, fechaYHoraActual);
+    this.estadoActual.finalizarLlamada(this, fechaYHoraActual);
 
     this.calcularDuracion();
   }
@@ -169,7 +169,7 @@ export class Llamada {
    */
   calcularDuracion(): number {
     // Buscar cambios de estado entre "En Curso" y "Finalizada".
-    const cambiosEstado = this.#cambioEstado.filter(
+    const cambiosEstado = this.cambioEstado.filter(
       (cambioEstado) =>
         cambioEstado.getEstado().getNombre() === NombresEstado.EN_CURSO ||
         cambioEstado.getEstado().getNombre() === NombresEstado.FINALIZADO,
@@ -179,7 +179,7 @@ export class Llamada {
     if (cambiosEstado.length === 0) return 0;
 
     // Si hay un cambio de estado, la duracion es la diferencia entre la fecha de inicio y la fecha actual.
-    this.#duracion =
+    this.duracion =
       (cambiosEstado[1].getFechaHoraInicio().getTime() -
         cambiosEstado[0].getFechaHoraInicio().getTime()) /
       1000;
@@ -189,14 +189,14 @@ export class Llamada {
    * Busca las validaciones de la opcion seleccionada de la llamada.
    */
   getValidacionesOpcionSeleccionada(): ListaValidacion[] {
-    return this.#opcionSeleccionada?.getValidaciones();
+    return this.opcionSeleccionada?.getValidaciones();
   }
 
   /**
    * Busca las validaciones de la subopcion seleccionada de la llamada.
    */
   getValidacionesSubOpcionSeleccionada(): ListaValidacion[] {
-    return this.#subOpcionSeleccionada?.getValidaciones();
+    return this.subOpcionSeleccionada?.getValidaciones();
   }
 
   /**
@@ -207,6 +207,6 @@ export class Llamada {
    * @returns
    */
   agregarCambioEstado(cambioEstado: CambioEstadoLlamada): void {
-    this.#cambioEstado.push(cambioEstado);
+    this.cambioEstado.push(cambioEstado);
   }
 }
