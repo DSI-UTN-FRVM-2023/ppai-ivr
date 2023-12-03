@@ -14,6 +14,11 @@ INSERT INTO Estado (id, nombre) VALUES
 -- Ahora sí pasamos a insertar las instancias necesarias para el ejemplo de demostración del caso de uso.
 -- Comenzar de abajo para arriba en términos de relaciones.
 
+INSERT INTO Accion (id, descripcion) VALUES
+(1, 'Comunicar un saldo'),
+(2, 'Dar de baja una tarjeta'),
+(3, 'Denunciar robo de una tarjeta');
+
 INSERT INTO CategoriaLlamada (id, nombre) VALUES
 (1, 'Robo');
 
