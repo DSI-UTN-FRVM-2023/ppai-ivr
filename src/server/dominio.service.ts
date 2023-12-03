@@ -18,6 +18,7 @@ import { Cliente } from './analisis/entity/Cliente';
 import { Validacion } from './analisis/entity/Validacion';
 import { OpcionValidacion } from './analisis/entity/OpcionValidacion';
 import { InformacionCliente } from './analisis/entity/InformacionCliente';
+import { LlamadaService } from './analisis/persistence/persistence.llamada.service';
 
 @Injectable()
 export class DominioService {
@@ -29,8 +30,14 @@ export class DominioService {
   acciones: Accion[] = [];
   categorias: CategoriaLlamada[] = [];
 
-  constructor() {
-    this.instanciarClasesSinPersistencia();
+  constructor(private readonly llamadas: LlamadaService) {
+    // this.instanciarClasesSinPersistencia();
+    this.buscarObjetosDominio();
+  }
+
+  private async buscarObjetosDominio(): Promise<void> {
+    // Buscar llamada con ID '1'.
+    const llamada = await this.llamadas.getLlamada(1);
   }
 
   private instanciarClasesSinPersistencia(): void {
