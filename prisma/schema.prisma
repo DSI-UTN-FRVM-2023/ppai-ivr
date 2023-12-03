@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Entidad de Acción
+model Accion {
+  id          Int       @id @default(autoincrement())
+  descripcion String
+  Llamada     Llamada[]
+}
+
+model OpcionValidacion {
+  id                 Int                  @id @default(autoincrement())
+  descripcion        String
+  correcta           Boolean
+  Validacion         Validacion?          @relation(fields: [validacionId], references: [id])
+  validacionId       Int?
+  InformacionCliente InformacionCliente[]
+}
+
+model Validacion {
+  id                 Int                  @id @default(autoincrement())
+  mensajeValidacion  String
+  opcionesValidacion OpcionValidacion[]
+  InformacionCliente InformacionCliente[]
+  SubOpcionLlamada   SubOpcionLlamada?    @relation(fields: [subOpcionLlamadaId], references: [id])
+  subOpcionLlamadaId Int?
+  OpcionLlamada      OpcionLlamada?       @relation(fields: [opcionLlamadaId], references: [id])
+  opcionLlamadaId    Int?
+}
+
+model InformacionCliente {
+  id               Int              @id @default(autoincrement())
+  datoAValidar     String?          @default("")
+  opcionCorrecta   OpcionValidacion @relation(fields: [opcionCorrectaId], references: [id])
+  opcionCorrectaId Int
+  validacion       Validacion       @relation(fields: [validacionId], references: [id])
+  validacionId     Int
+  Cliente          Cliente?         @relation(fields: [clienteId], references: [id])
+  clienteId        Int?
+}
+
+// Entidad de un Cliente.
+model Cliente {
+  id             Int                  @id @default(autoincrement())
+  dni            String               @unique
+  nombreCompleto String
+  nroCelular     String?
+  info           InformacionCliente[]
+  Llamada        Llamada[]
+}
+
+// Estados del dominio.
+model Estado {
+  id                  Int                   @id @default(autoincrement())
+  nombre              String
+  CambioEstadoLlamada CambioEstadoLlamada[]
+  Llamada             Llamada[]
+}
+
+// Cambio de Estado de la Llamada
+model CambioEstadoLlamada {
+  id              Int      @id @default(autoincrement())
+  fechaHoraInicio DateTime @default(now())
+  estado          Estado   @relation(fields: [estadoId], references: [id])
+  estadoId        Int
+  Llamada         Llamada? @relation(fields: [llamadaId], references: [id])
+  llamadaId       Int?
+}
+
+model SubOpcionLlamada {
+  id                     Int           @id @default(autoincrement())
+  nombre                 String
+  nroOrden               Int
+  opcionLlamada          OpcionLlamada @relation(fields: [opcionLlamadaId], references: [id])
+  opcionLlamadaId        Int
+  validacionesRequeridas Validacion[]
+  Llamada                Llamada[]
+}
+
+model OpcionLlamada {
+  id                     Int                @id @default(autoincrement())
+  nombre                 String
+  nroOrden               Int
+  subOpcionLlamada       SubOpcionLlamada[]
+  validacionesRequeridas Validacion[]
+  CategoriaLlamada       CategoriaLlamada?  @relation(fields: [categoriaLlamadaId], references: [id])
+  categoriaLlamadaId     Int?
+  Llamada                Llamada[]
+}
+
+model CategoriaLlamada {
+  id     Int             @id @default(autoincrement())
+  nombre String
+  opcion OpcionLlamada[]
+}
+
+model Llamada {
+  id                      Int                   @id @default(autoincrement())
+  descripcionOperador     String?               @default("")
+  detalleAccionRequerida  String?               @default("")
+  duracion                Float?
+  cliente                 Cliente?              @relation(fields: [clienteId], references: [id])
+  clienteId               Int?
+  opcionSeleccionada      OpcionLlamada?        @relation(fields: [opcionSeleccionadaId], references: [id])
+  opcionSeleccionadaId    Int?
+  subOpcionSeleccionada   SubOpcionLlamada?     @relation(fields: [subOpcionSeleccionadaId], references: [id])
+  subOpcionSeleccionadaId Int?
+  cambioEstado            CambioEstadoLlamada[]
+  estadoActual            Estado?               @relation(fields: [estadoActualId], references: [id])
+  estadoActualId          Int?
+  accionRequerida         Accion?               @relation(fields: [accionRequeridaId], references: [id])
+  accionRequeridaId       Int?
+}
