@@ -14,22 +14,6 @@ INSERT INTO Estado (id, nombre) VALUES
 -- Ahora sí pasamos a insertar las instancias necesarias para el ejemplo de demostración del caso de uso.
 -- Comenzar de abajo para arriba en términos de relaciones.
 
-INSERT INTO Validacion (id, mensajeValidacion, subOpcionLlamadaId) VALUES
-(1, 'Últimos 4 números de la tarjeta', 1),
-(2, 'Código de seguridad de la tarjeta', 1);
-
-INSERT INTO OpcionValidacion (id, descripcion, correcta, validacionId) VALUES
--- Opciones de la tarjeta
-(1, '1234', FALSE, 1),
-(2, '4321', FALSE, 1),
-(3, '5678', TRUE, 1),
-(4, '8765', FALSE, 1),
--- Opciones del código de seguridad
-(5, '123', FALSE, 2),
-(6, '321', FALSE, 2),
-(7, '456', TRUE, 2),
-(8, '654', FALSE, 2);
-
 INSERT INTO CategoriaLlamada (id, nombre) VALUES
 (1, 'Robo');
 
@@ -46,6 +30,22 @@ INSERT INTO SubOpcionLlamada (id, nombre, nroOrden, opcionLlamadaId) VALUES
 (4, 'Cuenta con datos tarjeta', 1, 2),
 (5, 'No cuenta con datos tarjeta', 2, 2),
 (6, 'Comunicar con responsable de at. al cliente', 3, 2);
+
+INSERT INTO Validacion (id, mensajeValidacion, subOpcionLlamadaId) VALUES
+(1, 'Últimos 4 números de la tarjeta', 1),
+(2, 'Código de seguridad de la tarjeta', 1);
+
+INSERT INTO OpcionValidacion (id, descripcion, correcta, validacionId) VALUES
+-- Opciones de la tarjeta
+(1, '1234', FALSE, 1),
+(2, '4321', FALSE, 1),
+(3, '5678', TRUE, 1),
+(4, '8765', FALSE, 1),
+-- Opciones del código de seguridad
+(5, '123', FALSE, 2),
+(6, '321', FALSE, 2),
+(7, '456', TRUE, 2),
+(8, '654', FALSE, 2);
 
 INSERT INTO Cliente (id, dni, nombreCompleto, nroCelular) VALUES
 (1, '43601084', 'SERNIOTTI ANDRÉS GUIDO', '+543535123456');
