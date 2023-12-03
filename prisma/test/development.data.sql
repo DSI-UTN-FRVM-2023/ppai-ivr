@@ -14,9 +14,9 @@ INSERT INTO Estado (id, nombre) VALUES
 -- Ahora sí pasamos a insertar las instancias necesarias para el ejemplo de demostración del caso de uso.
 -- Comenzar de abajo para arriba en términos de relaciones.
 
-INSERT INTO Validacion (id, mensajeValidacion) VALUES
-(1, 'Últimos 4 números de la tarjeta'),
-(2, 'Código de seguridad de la tarjeta');
+INSERT INTO Validacion (id, mensajeValidacion, subOpcionLlamadaId) VALUES
+(1, 'Últimos 4 números de la tarjeta', 1),
+(2, 'Código de seguridad de la tarjeta', 1);
 
 INSERT INTO OpcionValidacion (id, descripcion, correcta, validacionId) VALUES
 -- Opciones de la tarjeta
@@ -37,15 +37,15 @@ INSERT INTO OpcionLlamada (id, nombre, nroOrden, categoriaLlamadaId) VALUES
 (1, 'Informar robo y solicitar tarjeta nueva', 1, 1),
 (2, 'Informar robo y anular tarjeta', 2, 1);
 
-INSERT INTO SubOpcionLlamada (nombre, nroOrden, opcionLlamadaId) VALUES
+INSERT INTO SubOpcionLlamada (id, nombre, nroOrden, opcionLlamadaId) VALUES
 -- Para primera opcion de llamada
-('Cuenta con datos tarjeta', 1, 1),
-('No cuenta con datos tarjeta', 2, 1),
-('Comunicar con responsable de at. al cliente', 3, 1),
+(1, 'Cuenta con datos tarjeta', 1, 1),
+(2, 'No cuenta con datos tarjeta', 2, 1),
+(3, 'Comunicar con responsable de at. al cliente', 3, 1),
 -- Para segunda opcion de llamada
-('Cuenta con datos tarjeta', 1, 2),
-('No cuenta con datos tarjeta', 2, 2),
-('Comunicar con responsable de at. al cliente', 3, 2);
+(4, 'Cuenta con datos tarjeta', 1, 2),
+(5, 'No cuenta con datos tarjeta', 2, 2),
+(6, 'Comunicar con responsable de at. al cliente', 3, 2);
 
 INSERT INTO Cliente (id, dni, nombreCompleto, nroCelular) VALUES
 (1, '43601084', 'SERNIOTTI ANDRÉS GUIDO', '+543535123456');
