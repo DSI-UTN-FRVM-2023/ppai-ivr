@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { PrismaPersistenceService } from './persistence.prisma.service';
 import { CambioEstadoLlamadaService } from './persistence.cambioestadollamada.service';
 import { AccionService } from './persistence.accion.service';
+import { LlamadaService } from './persistence.llamada.service';
 
 @Module({
   providers: [
@@ -10,7 +11,8 @@ import { AccionService } from './persistence.accion.service';
     /** Domain entity classes services. */
     AccionService,
     CambioEstadoLlamadaService,
+    LlamadaService,
   ],
-  exports: [],
+  exports: [LlamadaService],
 })
 export class PersistenceModule {}
