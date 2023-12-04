@@ -185,7 +185,7 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * @returns {string[]} Listado de acciones posibles.
    */
   buscarAccionesRequeridas(): string[] {
-    const nuevo = this.crearIterador(this.dominio.acciones);
+    const nuevo = this.crearIterador(this.dominio.listaAcciones);
 
     nuevo.primero();
 

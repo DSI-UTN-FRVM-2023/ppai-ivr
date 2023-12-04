@@ -1,18 +1,10 @@
 import { Module } from '@nestjs/common';
-import { PrismaPersistenceService } from './persistence.prisma.service';
-import { CambioEstadoLlamadaService } from './persistence.cambioestadollamada.service';
-import { AccionService } from './persistence.accion.service';
-import { LlamadaService } from './persistence.llamada.service';
+import { DominioDataProvider } from './dominio.data.provider';
+import { PersistentDataModule } from './persistence.data.module';
 
 @Module({
-  providers: [
-    /** Prisma client. */
-    PrismaPersistenceService,
-    /** Domain entity classes services. */
-    AccionService,
-    CambioEstadoLlamadaService,
-    LlamadaService,
-  ],
-  exports: [LlamadaService],
+  imports: [PersistentDataModule],
+  providers: [DominioDataProvider],
+  exports: [DominioDataProvider],
 })
 export class PersistenceModule {}

@@ -12,4 +12,10 @@ export class InformacionClienteService {
   public async getInformacionesCliente() {
     return this.prisma.informacionCliente.findMany();
   }
+
+  public async getInformacionesClienteByCliente(cliente: number) {
+    return this.prisma.informacionCliente.findMany({
+      where: { clienteId: cliente },
+    });
+  }
 }

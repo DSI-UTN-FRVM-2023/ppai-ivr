@@ -20,13 +20,25 @@ export class Llamada {
   private estadoActual: Estado;
   private accionRequerida?: Accion;
 
-  constructor(cliente: Cliente) {
+  constructor(
+    cliente: Cliente,
+    estado: Estado,
+    cambioEstado: CambioEstadoLlamada[],
+  );
+  constructor(cliente: Cliente);
+  constructor(
+    cliente: Cliente,
+    estado?: Estado,
+    cambioEstado?: CambioEstadoLlamada[],
+  ) {
     this.cliente = cliente;
 
     const estadoInicial = new Iniciado(new Date());
 
-    this.cambioEstado = [new CambioEstadoLlamada(new Date(), estadoInicial)];
-    this.estadoActual = estadoInicial;
+    this.cambioEstado = cambioEstado ?? [
+      new CambioEstadoLlamada(new Date(), estadoInicial),
+    ];
+    this.estadoActual = estado ?? estadoInicial;
   }
 
   setDescripcionOperador(descripcionOperador: string): void {

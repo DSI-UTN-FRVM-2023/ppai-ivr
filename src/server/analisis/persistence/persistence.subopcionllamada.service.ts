@@ -12,4 +12,10 @@ export class SubopcionLlamadaService {
   public async getSubopcionesLlamada() {
     return this.prisma.subOpcionLlamada.findMany();
   }
+
+  public async getSubopcionesLlamadaByOpcionLlamada(opcionLlamada: number) {
+    return this.prisma.subOpcionLlamada.findMany({
+      where: { opcionLlamadaId: opcionLlamada },
+    });
+  }
 }
