@@ -61,13 +61,13 @@ const MainSidebar = ({ info }) => {
       },
     });
 
-    mostrarAccionParaSeleccion();
+    mostrarAccionesParaSeleccion();
   }
 
-  async function mostrarAccionParaSeleccion() {
+  async function mostrarAccionesParaSeleccion() {
     const { data: acciones } = await axios({
       method: 'GET',
-      url: '/boundary/mostrarAccionParaSeleccion',
+      url: '/boundary/mostrarAccionesParaSeleccion',
     });
 
     setAcciones(acciones);

@@ -64,11 +64,11 @@ export class PantallaRtaOperador {
     this.gestor.tomarIngresoRespuesta(respuesta.respuestaOperador);
   }
 
-  @Get('/boundary/mostrarAccionParaSeleccion')
+  @Get('/boundary/mostrarAccionesParaSeleccion')
   /**
    * Este método no lo puede llamar el gestor directamente, pero es llamado de todas formas al finalizar el ingreso de la respuesta.
    */
-  async mostrarAccionParaSeleccion() {
+  async mostrarAccionesParaSeleccion() {
     return this.gestor.accionesRequeridas;
   }
 
