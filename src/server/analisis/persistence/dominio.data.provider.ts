@@ -178,8 +178,7 @@ export const DominioDataProvider: Provider = {
 
     // Crear las instancias de Estado.
     let estado: Estado;
-    if (llamada.estadoActual.nombre === 'Iniciado')
-      estado = new Iniciado(new Date());
+    if (llamada.estadoActual.nombre === 'Iniciado') estado = new Iniciado();
 
     // Crear las instancias de los cambios de estado.
     const cambiosEstado: CambioEstadoLlamada[] = [];

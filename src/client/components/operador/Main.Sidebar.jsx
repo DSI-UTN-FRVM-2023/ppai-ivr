@@ -11,7 +11,7 @@ const MainSidebar = ({ info }) => {
 
   /**
    * Toma el ingreso de un dato de validación por parte del operador.
-   * 
+   *
    * @param {*} valorValidacion El valor de la opcion seleccionada.
    * @param {*} nombreValidacion El nombre de la validación donde se seleccionó la opción.
    * @param {*} setEsCorrecto Puntero a la función de si es correcta o no.
@@ -37,7 +37,24 @@ const MainSidebar = ({ info }) => {
       ).correcta,
     );
 
-    setDatosValidacion(data);
+    setDatosValidacion((prev) => {
+      console.log(prev, data);
+
+      const newstate = [
+        ...(prev?.length
+          ? prev.filter(
+              (validacion) => validacion?.nombreValidacion !== nombreValidacion,
+            )
+          : []),
+        ...(data?.length
+          ? data.filter(
+              (validacion) => validacion?.nombreValidacion === nombreValidacion,
+            )
+          : []),
+      ];
+
+      return newstate;
+    });
 
     solicitarRespuestaOperador();
   }
@@ -170,8 +187,8 @@ const MainSidebar = ({ info }) => {
       )}
 
       {/** Si ya se tienen todas las validaciones correctas, habilitar la descripción del operador. */}
-      {datosValidacion.filter(({ correcta }) => correcta).length ===
-        datosValidacion.length && datosValidacion.length > 0 ? (
+      {datosValidacion?.filter(({ correcta }) => correcta)?.length ===
+      datosValidacion?.length && datosValidacion?.length >= 2 ? (
         <div className="">
           <h2 className="text-md font-bold text-slate-100">
             Ingrese una descripción
@@ -208,7 +225,11 @@ const MainSidebar = ({ info }) => {
 
               {/** Si ya estamos para la confirmación, mostrar el botón de confirmar. */}
               {confirmacionOperador ? (
-                <button name="botonConfirmacion" className="w-full my-4 p-2 rounded-xl bg-green-600 text-white font-bold" onClick={(e) => tomarConfirmacionOperacion()}>
+                <button
+                  name="botonConfirmacion"
+                  className="w-full my-4 p-2 rounded-xl bg-green-600 text-white font-bold"
+                  onClick={(e) => tomarConfirmacionOperacion()}
+                >
                   Confirmar Respuesta
                 </button>
               ) : null}

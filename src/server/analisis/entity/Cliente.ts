@@ -71,9 +71,9 @@ export class Cliente implements IColeccion<InformacionCliente> {
       nuevo.primero();
 
       while (!nuevo.haTerminado()) {
-        nuevo.actual();
+        const actual = nuevo.actual();
 
-        const esCorrecta = nuevo.cumpleFiltros([
+        const esCorrecta = nuevo.cumpleFiltros(actual, [
           datos.nombreValidacion,
           datos.datoValidacion,
         ]);
