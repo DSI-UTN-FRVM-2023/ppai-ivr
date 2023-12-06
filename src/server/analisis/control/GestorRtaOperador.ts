@@ -57,7 +57,6 @@ export class GestorRtaOperador implements IColeccion<Accion> {
   ) {
     this.llamadaEnCurso = this.dominio.llamadaEnCurso;
     this.categoriaLlamada = this.dominio.categoriaLlamadaEnCurso;
-    this.fechaHoraActual = this.getFechaYHoraActual();
   }
 
   /**
@@ -96,6 +95,8 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * Toma la llamada Iniciada de un cliente y la pasa a En Curso.
    */
   recibirLlamada(): void {
+    this.getFechaYHoraActual();
+
     this.llamadaEnCurso.tomadaPorOperador(this.fechaHoraActual);
   }
 
@@ -245,7 +246,10 @@ export class GestorRtaOperador implements IColeccion<Accion> {
    * @returns {Date} Fecha y hora actual.
    */
   getFechaYHoraActual(): Date {
-    return new Date();
+    const fecha = new Date();
+
+    this.fechaHoraActual = fecha;
+    return fecha;
   }
 
   /**

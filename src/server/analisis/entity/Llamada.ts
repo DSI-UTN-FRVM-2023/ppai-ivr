@@ -33,7 +33,7 @@ export class Llamada {
   ) {
     this.cliente = cliente;
 
-    const estadoInicial = new Iniciado(new Date());
+    const estadoInicial = new Iniciado();
 
     this.cambioEstado = cambioEstado ?? [
       new CambioEstadoLlamada(new Date(), estadoInicial),

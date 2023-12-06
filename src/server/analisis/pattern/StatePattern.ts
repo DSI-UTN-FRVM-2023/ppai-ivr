@@ -2,11 +2,8 @@ import { Estado } from '../entity/Estado';
 import { Llamada } from '../entity/Llamada';
 
 export class Finalizada extends Estado {
-  private fechaHoraInicio: Date;
-
-  constructor(fechaHoraInicio: Date) {
+  constructor() {
     super('Finalizada');
-    this.fechaHoraInicio = fechaHoraInicio;
   }
 
   tomadaPorOperador(object: Llamada, fechaHora: Date): void {
@@ -43,15 +40,12 @@ export class Finalizada extends Estado {
 }
 
 export class EnCurso extends Estado {
-  private fechaHoraInicio: Date;
-
-  constructor(fechaHoraInicio: Date) {
+  constructor() {
     super('En Curso');
-    this.fechaHoraInicio = fechaHoraInicio;
   }
 
-  public crearEstadoFinalizada(): Finalizada {
-    return new Finalizada(this.fechaHoraInicio);
+  private crearEstadoFinalizada(): Finalizada {
+    return new Finalizada();
   }
 
   tomadaPorOperador(object: Llamada, fechaHora: Date): void {
@@ -96,15 +90,12 @@ export class EnCurso extends Estado {
 }
 
 export class Iniciado extends Estado {
-  private fechaHoraInicio: Date;
-
-  constructor(fechaHoraInicio: Date) {
+  constructor() {
     super('Iniciado');
-    this.fechaHoraInicio = fechaHoraInicio;
   }
 
-  public crearEstadoEnCurso(): EnCurso {
-    return new EnCurso(this.fechaHoraInicio);
+  private crearEstadoEnCurso(): EnCurso {
+    return new EnCurso();
   }
 
   tomadaPorOperador(object: Llamada, fechaHora: Date): void {
