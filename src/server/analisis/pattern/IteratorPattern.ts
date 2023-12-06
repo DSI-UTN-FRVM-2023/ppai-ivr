@@ -31,11 +31,12 @@ export interface IIterador<T> {
   /**
    * Valida ciertos filtros para el elemento actual.
    *
+   * @param {T} instancia La instancia a validar.
    * @param {any[]} filtros Los filtros a validar.
    *
    * @returns {boolean} Verdadero si el elemento actual cumple con los filtros, falso en caso contrario.
    */
-  cumpleFiltros(filtros: any[]): boolean;
+  cumpleFiltros(instancia: T, filtros: any[]): boolean;
 }
 
 export interface IColeccion<T> {
@@ -81,7 +82,7 @@ export class IteradorValidacion implements IIterador<Validacion> {
       : true;
   }
 
-  cumpleFiltros(filtros: any[]): boolean {
+  cumpleFiltros(instancia: Validacion, filtros: any[]): boolean {
     throw new Error('Method not implemented.');
   }
 }
@@ -113,7 +114,7 @@ export class IteradorAccion implements IIterador<Accion> {
       : true;
   }
 
-  cumpleFiltros(filtros: any[]): boolean {
+  cumpleFiltros(instancia: Accion, filtros: any[]): boolean {
     throw new Error('Method not implemented.');
   }
 }
@@ -149,13 +150,11 @@ export class IteradorInformacionCliente
       : true;
   }
 
-  cumpleFiltros(filtros: any[]): boolean {
-    const actual = this.actual();
-
+  cumpleFiltros(instancia: InformacionCliente, filtros: any[]): boolean {
     // Validación 1: Es validación de...
-    const esValidacion = actual.esValidacion(filtros[0]);
+    const esValidacion = instancia.esValidacion(filtros[0]);
     // Validación 2: Es información correcta de "dato"
-    const esInformacionCorrecta = actual.esInformacionCorrecta(filtros[1]);
+    const esInformacionCorrecta = instancia.esInformacionCorrecta(filtros[1]);
 
     return esValidacion && esInformacionCorrecta;
   }
@@ -188,7 +187,7 @@ export class IteradorOpcionValidacion implements IIterador<OpcionValidacion> {
       : true;
   }
 
-  cumpleFiltros(filtros: any[]): boolean {
+  cumpleFiltros(instancia: OpcionValidacion, filtros: any[]): boolean {
     throw new Error('Method not implemented.');
   }
 }
